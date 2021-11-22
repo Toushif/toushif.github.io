@@ -6,6 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<script defer src="cv-pdf-base64.js"></script>
 <style>
     body,
     h1,
@@ -400,7 +401,7 @@
 
         function DownloadFile(fileName) {
             //Convert the Byte Data to BLOB object.
-            var blobTxt = "data:application/pdf;base64,"     
+            var blobTxt = `data:application/pdf;base64,${base64}`
             //Check the Browser type and download the File.
             var isIE = false || !!document.documentMode;
             if (isIE) {
