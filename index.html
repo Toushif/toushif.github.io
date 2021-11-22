@@ -1,1 +1,320 @@
-I am Toushif, call me Boris!
+
+<!DOCTYPE html>
+<html lang="en">
+<title>Toushif Haque</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="/icon.jpg" type="image/x-icon">
+<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
+<style>
+    body,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5 {
+        font-family: "Raleway", sans-serif
+    }
+
+    .w3-third img {
+        margin-bottom: -6px;
+        opacity: 0.8;
+        cursor: pointer
+    }
+
+    .w3-third img:hover {
+        opacity: 1
+    }
+</style>
+
+<body class="w3-light-grey w3-content" style="max-width:1600px">
+
+    <!-- Sidebar/menu -->
+    <nav class="w3-sidebar w3-bar-block w3-white w3-animate-left w3-text-grey w3-collapse w3-top w3-center"
+        style="z-index:3;width:300px;font-weight:bold" id="mySidebar"><br>
+        <h3 class="w3-padding-64 w3-center"><b>TOUSHIF HAQUE</b></h3>
+        <a href="javascript:void(0)" onclick="w3_close()"
+            class="w3-bar-item w3-button w3-padding w3-hide-large">CLOSE</a>
+        <a href="#" onclick="w3_close()" class="w3-bar-item w3-button">PORTFOLIO</a>
+        <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT ME</a>
+        <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a>
+    </nav>
+
+    <!-- Top menu on small screens -->
+    <header class="w3-container w3-top w3-hide-large w3-white w3-xlarge w3-padding-16">
+        <span class="w3-left w3-padding">TOUSHIF HAQUE</span>
+        <a href="javascript:void(0)" class="w3-right w3-button w3-white" onclick="w3_open()">☰</a>
+    </header>
+
+    <!-- Overlay effect when opening sidebar on small screens -->
+    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
+        title="close side menu" id="myOverlay"></div>
+
+    <!-- !PAGE CONTENT! -->
+    <div class="w3-main" style="margin-left:300px">
+
+        <!-- Push down content on small screens -->
+        <div class="w3-hide-large" style="margin-top:83px"></div>
+
+        <!-- Photo grid -->
+        <div class="w3-row">
+            <div class="w3-third">
+                <img src="natureboy.jpeg" style="width:100%" onclick="onClick(this)"
+                    alt="A boy surrounded by beautiful nature">
+                <!-- <img src="girl_mountain.jpeg" style="width:100%" onclick="onClick(this)"
+                    alt="What a beautiful scenery this sunset"> -->
+            </div>
+
+            <div class="w3-third">
+                <img src="boy.jpeg" style="width:100%" onclick="onClick(this)"
+                    alt="Quiet day at the beach. Cold, but beautiful">
+                <!-- <img src="man_bench.jpeg" style="width:100%" onclick="onClick(this)"
+                    alt="Waiting for the bus in the desert"> --> 
+            </div>
+
+            <div class="w3-third">
+                <img src="girl.jpeg" style="width:100%" onclick="onClick(this)" alt="Canoeing again">
+                <!-- <img src="girl_train.jpeg" style="width:100%" onclick="onClick(this)" alt="A girl, and a train passing"> -->
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="w3-center w3-padding-32">
+            <div class="w3-bar">
+                <a href="#" class="w3-bar-item w3-button w3-hover-black">«</a>
+                <a href="#" class="w3-bar-item w3-black w3-button">1</a>
+                <!-- <a href="#" class="w3-bar-item w3-button w3-hover-black">2</a>
+                <a href="#" class="w3-bar-item w3-button w3-hover-black">3</a>
+                <a href="#" class="w3-bar-item w3-button w3-hover-black">4</a>
+                <a href="#" class="w3-bar-item w3-button w3-hover-black">»</a> -->
+            </div>
+        </div>
+
+        <!-- Modal for full size images on click-->
+        <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
+            <span class="w3-button w3-black w3-xlarge w3-display-topright">×</span>
+            <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
+                <img id="img01" class="w3-image">
+                <p id="caption"></p>
+            </div>
+        </div>
+
+        <!-- About section -->
+        <div class="w3-container w3-dark-grey w3-center w3-text-light-grey w3-padding-32" id="about">
+            <h4><b>About Me</b></h4>
+            <img src="preview.jpg" alt="Me" class="w3-image w3-padding-32" width="600" height="650">
+            <div class="w3-content w3-justify" style="max-width:600px">
+                <h4>TOUSHIF HAQUE</h4>
+                <p>I am a Full stack Developer with 5 years commercial experience, graduate of Information Technology and in Love with JavaScript. 
+                    I have worked full time with organisations like <b>IBM</b> and <b>Cognizant</b> over 
+                    the past 5 years, and worked with different clients like 
+                    <b>Daimler, Mercedez Benz, Maersk Line, British American Tobacco, Standard Insurance Company, LPL Financial</b>, etc.  
+                    I create <b>Robust</b>, <b>Scalable</b> <b>and Successful Websites/Web Applications</b> that are fast, easy to use, and built with best practices.
+                <p/>
+                <p>
+                    I work to make a better web; one that is fast, easy to use, beautiful, accessible to all, and frustration-free. 
+                    Regardless of your specific business requirements, in solving these challenges, you have a great chance of finding success online.
+                <p/>
+                <p>
+                    I specialize in <b>React, Angular, Vue, NodeJS, Express, SQL, etc </b>.
+                    My main experience is in front-end development but I also have a passion for designing a fast and scalable Back-end architecture. 
+                    Given that producing a modern website requires the combination of design, server technology, and the layer that users interacts with, 
+                    I believe having experience in both design and development allows for making the most optimal user experiences.
+                </p>
+                <p>mail: toushif.haq@gmail.com</p>
+                <!-- <p>tel: +91 8981288955</p> -->
+                <hr class="w3-opacity">
+                <h4 class="w3-padding-16">Technical Skills</h4>
+                <p class="w3-wide">React</p>
+                <div class="w3-white">
+                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:95%">95%</div>
+                </div>
+                <p class="w3-wide">Angular</p>
+                <div class="w3-white">
+                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:90%">90%</div>
+                </div>
+                <p class="w3-wide">NodeJS</p>
+                <div class="w3-white">
+                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:90%">90%</div>
+                </div>
+                <p>
+                    <button class="w3-button w3-light-grey w3-padding-large w3-margin-top w3-margin-bottom" onclick="DownloadFile('Toushif_Resume.pdf')">Download
+                        Resume</button>
+                </p>
+                <hr class="w3-opacity">
+
+                <h4 class="w3-padding-16">How much I charge</h4>
+                <div class="w3-row-padding" style="margin:0 -16px">
+                    <div class="w3-half w3-margin-bottom">
+                        <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
+                            <li class="w3-black w3-xlarge w3-padding-32">Basic</li>
+                            <li class="w3-padding-16">React</li>
+                            <li class="w3-padding-16">Angular</li>
+                            <li class="w3-padding-16">NodeJS</li>
+                            <li class="w3-padding-16">Mail Support</li>
+                            <li class="w3-padding-16">
+                                <h2>₹ 15000</h2>
+                                <span class="w3-opacity">per month</span>
+                            </li>
+                            <li class="w3-light-grey w3-padding-24">
+                                <button class="w3-button w3-white w3-padding-large">Sign Up</button>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="w3-half">
+                        <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
+                            <li class="w3-black w3-xlarge w3-padding-32">Pro</li>
+                            <li class="w3-padding-16">React</li>
+                            <li class="w3-padding-16">Angular</li>
+                            <li class="w3-padding-16">NodeJS</li>
+                            <li class="w3-padding-16">Endless Support</li>
+                            <li class="w3-padding-16">
+                                <h2>₹ 25000</h2>
+                                <span class="w3-opacity">per month</span>
+                            </li>
+                            <li class="w3-light-grey w3-padding-24">
+                                <button class="w3-button w3-white w3-padding-large">Sign Up</button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contact section -->
+        <div class="w3-container w3-light-grey w3-padding-32 w3-padding-large" id="contact">
+            <div class="w3-content" style="max-width:600px">
+                <h4 class="w3-center"><b>Contact Me</b></h4>
+                <p>Do you want me to create your websites/web applications? Fill out the form and fill me in with the details :) I love meeting
+                    new people!</p>
+                <form action="/action_page.php" target="_blank">
+                    <div class="w3-section">
+                        <label>Name</label>
+                        <input class="w3-input w3-border" type="text" name="Name" id="message-name" required>
+                    </div>
+                    <div class="w3-section">
+                        <label>Email</label>
+                        <input class="w3-input w3-border" type="text" name="Email" id="message-email" required>
+                    </div>
+                    <div class="w3-section">
+                        <label>Message</label>
+                        <input class="w3-input w3-border" type="text" name="Message" id="message-body" required>
+                    </div>
+                    <button type="submit" class="w3-button w3-block w3-black w3-margin-bottom" onclick="sendMail()">Send Message</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="w3-container w3-padding-32 w3-grey">
+            <div class="w3-row-padding">
+                <div class="w3-third">
+                    <h3>INFO</h3>
+                    <p>This website is in progress with incomplete data. Tonnes to be updated, Keep an eye! ;)</p>
+                </div>
+
+                <div class="w3-third">
+                    <h3>BLOG POSTS</h3>
+                    <ul class="w3-ul">
+                        <li class="w3-padding-16 w3-hover-black">
+                            <img src="workshop.jpeg" class="w3-left w3-margin-right" style="width:50px">
+                            <span class="w3-large">JavaScript</span><br>
+                            <span>In Progres...</span>
+                        </li>
+                        <!-- <li class="w3-padding-16 w3-hover-black">
+                            <img src="gondol.jpeg" class="w3-left w3-margin-right" style="width:50px">
+                            <span class="w3-large">Ipsum</span><br>
+                            <span>Praes tinci sed</span>
+                        </li> -->
+                    </ul>
+                </div>
+
+                <div class="w3-third">
+                    <h3>POPULAR TAGS</h3>
+                    <p>
+                        <span class="w3-tag w3-black w3-margin-bottom">Coding</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">JavaScript</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Angular</span>
+                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">React</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">NodeJS</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">SQL</span>
+                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Vue</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Express</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Front-End Programming</span>
+                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">DevOps</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">React native</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Kotlin</span>
+                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Swift</span> <span
+                            class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Mobilty</span>
+                    </p>
+                </div>
+            </div>
+        </footer>
+
+        <div class="w3-black w3-center w3-padding-24">Powered by <a onclick="return false;" href="javascript.void(0)"
+                title="W3.CSS" target="_blank" class="w3-hover-opacity">Toushif</a></div>
+
+        <!-- End page content -->
+    </div>
+
+    <script>
+        // Script to open and close sidebar
+        function w3_open() {
+            document.getElementById("mySidebar").style.display = "block";
+            document.getElementById("myOverlay").style.display = "block";
+        }
+
+        function w3_close() {
+            document.getElementById("mySidebar").style.display = "none";
+            document.getElementById("myOverlay").style.display = "none";
+        }
+
+        // Modal Image Gallery
+        function onClick(element) {
+            document.getElementById("img01").src = element.src;
+            document.getElementById("modal01").style.display = "block";
+            var captionText = document.getElementById("caption");
+            captionText.innerHTML = element.alt;
+        }
+
+        function DownloadFile(fileName) {
+            //Convert the Byte Data to BLOB object.
+            var blobTxt = "data:application/pdf;base64,"     
+            //Check the Browser type and download the File.
+            var isIE = false || !!document.documentMode;
+            if (isIE) {
+                window.navigator.msSaveBlob(blob, fileName);
+            } else {
+                link = blobTxt;
+                var a = document.createElement("a");
+                a.setAttribute("download", fileName);
+                a.setAttribute("href", link);
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+            }
+        }
+
+        function sendMail() {
+            var name = document.getElementById('message-name').value;
+            var mail = document.getElementById('message-email').value;
+            var body = document.getElementById('message-body').value;
+            if(name && mail && body) {
+                var link = "mailto:toushif.haq@gmail.com"
+                        + "?cc="
+                        + "&subject=" + encodeURIComponent("Hi I am " + name + ', mail ID - ' + mail)
+                        + "&body=" + encodeURIComponent(body)
+                ;
+                
+                window.open(link);
+            }
+        }
+
+    </script>
+
+
+</body>
+
+</html>
