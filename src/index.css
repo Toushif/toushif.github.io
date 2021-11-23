@@ -24,6 +24,12 @@ h5 {
     filter: brightness(1.7) contrast(0.8);
 }
 
+@media (max-width: 768px) {
+    .modal-img-display {
+        max-width: 100%;
+    }
+}
+
 .w3-third img:hover {
     opacity: 1;
 }
