@@ -17,6 +17,13 @@ h5 {
     cursor: pointer;
 }
 
+.modal-img-display {
+    max-width: 55%;
+}
+.w3-third .apply-filters {
+    filter: brightness(1.7) contrast(0.8);
+}
+
 .w3-third img:hover {
     opacity: 1;
 }
