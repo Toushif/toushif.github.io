@@ -1,394 +1,826 @@
-
 <!DOCTYPE html>
-<html lang="en">
-<title>Toushif Portfolio</title>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="icon" href="https://toushifcodes.w3spaces.com/icon.jpg" type="image/x-icon">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway">
-<link rel="stylesheet" href="src/index.css">
-<script defer src="src/cv-pdf-base64.js"></script>
-<script src="src/index.js"></script>
+<html lang="en" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Toushif UL Haque - Frontend Developer Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: "Modern Verdant" - --color-darkest-bg: #2f3e46ff (charcoal - side menu, deep text); --color-dark-text: #354f52ff (dark-slate-gray - main text, headings); --color-dark-accent: #52796fff (hookers-green - active states, dark elements); --color-light-accent: #84a98cff (cambridge-blue - lighter elements, hovers); --color-lightest: #cad2c5ff (ash-gray - main background, light elements). -->
+    <!-- Application Structure Plan: The portfolio is structured with a fixed left-side navigation for easy access to main sections: About Me, Summary, Skills, Experience, Education, Documents, and Contact Me. The primary content area on the right provides detailed information for each section. The interactive experience is driven by filterable skills, a collapsible experience timeline, and a dynamic image carousel for documents, all designed to make the user journey intuitive and engaging. The Contact Me form, accessible via a prominent button or modal, facilitates direct communication. -->
+    <!-- Visualization & Content Choices: 
+        - About Me (Inform): Detailed introductory text including direct contact info.
+        - Summary (Inform): Concise text with key portfolio/social links.
+        - Skills (Organize/Inform): Filterable grid of skills with Unicode icons. Goal: Allow quick filtering and identification of specific expertise. Method: HTML/CSS grid + JS filtering. Justification: Enhances scanability and user engagement over a static list.
+        - Skill Proficiency (Compare): Radar chart using Chart.js. Goal: Visualize relative proficiency across key skill categories. Method: Canvas Chart. Justification: Provides a holistic, comparative view of strengths.
+        - Experience (Change/Organize): Interactive vertical timeline with collapsible details. Goal: Present career progression clearly while allowing drill-down into specific achievements. Method: HTML/CSS + JS show/hide. Justification: More dynamic and less overwhelming than continuous text blocks.
+        - Education/Certifications (Inform): Simple, clear lists.
+        - Documents (Organize/Explore): Collapsible section with an auto-cycling image carousel for certificates. Goal: Showcase visual proof of qualifications without cluttering the main page. Method: HTML/CSS + JS for collapse and automated carousel logic. Justification: Interactive, space-efficient, and visually engaging.
+        - Contact Me (Task): Interactive form in a modal and inline. Goal: Provide a clear call to action and a structured way for users to reach out. Method: HTML form + JS for validation and mailto link generation. Justification: Professional and directly actionable.
+    -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        :root {
+            --color-darkest-bg: #2f3e46ff; /* charcoal */
+            --color-dark-text: #354f52ff; /* dark-slate-gray */
+            --color-dark-accent: #52796fff; /* hookers-green */
+            --color-light-accent: #84a98cff; /* cambridge-blue */
+            --color-lightest: #cad2c5ff; /* ash-gray */
+        }
+        body {
+            font-family: 'Raleway', sans-serif;
+            background-color: var(--color-lightest);
+            color: var(--color-dark-text);
+        }
+        .bg-darkest-bg { background-color: var(--color-darkest-bg); }
+        .text-darkest-bg { color: var(--color-darkest-bg); }
+        .bg-dark-text { background-color: var(--color-dark-text); }
+        .text-dark-text { color: var(--color-dark-text); }
+        .bg-dark-accent { background-color: var(--color-dark-accent); }
+        .text-dark-accent { color: var(--color-dark-accent); }
+        .bg-light-accent { background-color: var(--color-light-accent); }
+        .text-light-accent { color: var(--color-light-accent); }
+        .bg-lightest { background-color: var(--color-lightest); }
+        .text-lightest { color: var(--color-lightest); }
+        
+        .hover\:bg-dark-accent-hover:hover { background-color: #4a6b5e; } /* Slightly darker hookers-green for hover */
+        .hover\:text-light-accent-hover:hover { color: #9abfa7; } /* Slightly lighter cambridge-blue for hover */
+        
+        .chart-container {
+            position: relative;
+            width: 100%;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+            height: 300px;
+            max-height: 400px;
+        }
+        @media (min-width: 768px) {
+            .chart-container {
+                height: 400px;
+            }
+        }
+        .timeline-item:not(:last-child)::before {
+            content: '';
+            position: absolute;
+            width: 2px;
+            background-color: var(--color-light-accent);
+            left: 1.25rem;
+            top: 2.5rem;
+            bottom: -1rem;
+            transform: translateX(-50%);
+        }
+        .nav-link {
+            transition: color 0.3s ease, background-color 0.3s ease;
+        }
+        .nav-link.active {
+            color: var(--color-lightest); /* Highlight text with lightest color */
+            background-color: var(--color-dark-accent); /* Active background color */
+        }
+        .skill-btn.active {
+            background-color: var(--color-dark-accent);
+            color: var(--color-lightest);
+        }
+        .skill-item-card {
+            background-color: var(--color-lightest);
+            color: var(--color-dark-text);
+            transition: background-color 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .skill-item-card:hover {
+            background-color: var(--color-light-accent);
+            transform: translateY(-4px);
+            box-shadow: 0 6px 10px -3px rgba(0, 0, 0, 0.15);
+        }
 
-<body class="w3-light-grey w3-content" style="max-width:1600px">
+        /* Carousel specific styles */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            background-color: var(--color-lightest);
+        }
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-slide {
+            min-width: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+        }
+        .carousel-slide img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        .carousel-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(0, 0, 0, 0.5);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 9999px;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .carousel-button.left { left: 1rem; }
+        .carousel-button.right { right: 1rem; }
+        
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-content {
+            background-color: var(--color-lightest);
+            padding: 2.5rem;
+            border-radius: 1rem;
+            max-width: 90%;
+            width: 500px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+        .close-button {
+            color: var(--color-dark-text);
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        /* Gradient background for main content */
+        .main-gradient-bg {
+            background: linear-gradient(to bottom, var(--color-lightest) 0%, var(--color-light-accent) 30%, var(--color-dark-accent) 70%, var(--color-dark-text) 100%);
+        }
+    </style>
+</head>
+<body class="flex flex-col md:flex-row min-h-screen">
 
-    <!-- Sidebar/menu -->
-    <nav class="w3-sidebar w3-bar-block w3-white w3-animate-left w3-text-grey w3-collapse w3-top w3-center"
-        style="z-index:3;width:300px;font-weight:bold" id="mySidebar"><br>
-        <h3 class="w3-padding-64 w3-center"><b>TOUSHIF UL HAQUE</b></h3>
-        <a href="javascript:void(0)" onclick="w3_close()"
-            class="w3-bar-item w3-button w3-padding w3-hide-large">CLOSE</a>
-        <a href="#" onclick="w3_close()" class="w3-bar-item w3-button">PORTFOLIO</a>
-        <a href="#about" onclick="w3_close()" class="w3-bar-item w3-button">ABOUT ME</a>
-        <a href="#work" onclick="w3_close()" class="w3-bar-item w3-button">PASSION</a>
-        <a href="#contact" onclick="w3_close()" class="w3-bar-item w3-button">CONTACT</a>
+    <!-- Left Fixed Side Menu -->
+    <nav class="hidden md:flex flex-col w-64 bg-darkest-bg text-lightest p-6 fixed h-full shadow-lg z-40">
+        <h1 class="text-3xl font-bold mb-8 text-lightest">Toushif UL Haque</h1>
+        <div class="space-y-4 flex-grow">
+            <a href="#about" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'about')">About Me</a>
+            <a href="#summary" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'summary')">Summary</a>
+            <a href="#skills" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'skills')">Skills</a>
+            <a href="#experience" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'experience')">Experience</a>
+            <a href="#education" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'education')">Education</a>
+            <a href="#documents" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'documents')">Documents</a>
+            <a href="#contact" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'contact')">Contact Me</a>
+        </div>
+        <div class="mt-8">
+            <p class="text-sm text-light-accent">&copy; 2025 Toushif UL Haque</p>
+        </div>
     </nav>
 
-    <!-- Top menu on small screens -->
-    <header class="w3-container w3-top w3-hide-large w3-white w3-xlarge w3-padding-16">
-        <span class="w3-left w3-padding">TOUSHIF UL HAQUE</span>
-        <a href="javascript:void(0)" class="w3-right w3-button w3-white" onclick="w3_open()">☰</a>
-    </header>
+    <!-- Header for Mobile and Top-Right for Desktop -->
+    <div class="flex-grow flex flex-col md:ml-64">
+        <header class="bg-lightest/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
+            <nav class="container mx-auto px-6 py-4 flex justify-end items-center space-x-4">
+                <a href="https://docs.google.com/document/d/1D3Jgu0izTiXyFpnQdSgUC_GflpYde_rM90bZ_AfD99w/export?format=pdf" target="_blank" rel="noopener noreferrer" class="bg-dark-accent text-lightest px-4 py-2 rounded-lg hover:bg-dark-accent-hover transition">Download Resume</a>
+                <button class="bg-dark-accent text-lightest px-4 py-2 rounded-lg hover:bg-dark-accent-hover transition" onclick="openContactModal()">Contact Me</button>
+            </nav>
+        </header>
 
-    <!-- Overlay effect when opening sidebar on small screens -->
-    <div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer"
-        title="close side menu" id="myOverlay"></div>
+        <main class="container mx-auto p-6 md:p-8 flex-grow main-gradient-bg">
 
-    <!-- !PAGE CONTENT! -->
-    <div class="w3-main" style="margin-left:300px">
-
-        <!-- Push down content on small screens -->
-        <div class="w3-hide-large" style="margin-top:83px"></div>
-
-        <!-- Photo grid -->
-        <div class="w3-row">
-            <div class="w3-third">
-                <img src="/assets/images/frontend.PNG" style="width:100%;filter: saturate(1.5);" onclick="onClick(this)"
-                    alt="Frontend Tech Stack">
-                <!-- <img src="girl_mountain.jpeg" style="width:100%" onclick="onClick(this)"
-                    alt="What a beautiful scenery this sunset"> -->
-            </div>
-
-            <div class="w3-third">
-                <img class="apply-filters" src="/assets/images/backend.PNG" style="width:100%" onclick="onClick(this)"
-                    alt="Backend Tech Stack">
-                <!-- <img src="man_bench.jpeg" style="width:100%" onclick="onClick(this)"
-                    alt="Waiting for the bus in the desert"> --> 
-            </div>
-
-            <div class="w3-third">
-                <img class="apply-filters" src="/assets/images/devops.PNG" style="width:100%" onclick="onClick(this)" alt="Devops Tech Stack">
-                <!-- <img src="girl_train.jpeg" style="width:100%" onclick="onClick(this)" alt="A girl, and a train passing"> -->
-            </div>
-        </div>
-
-        <!-- Pagination -->
-        <div class="w3-center w3-padding-32">
-            <!-- <div class="w3-bar">
-                <a href="#" class="w3-bar-item w3-button w3-hover-black">«</a>
-                <a href="#" class="w3-bar-item w3-black w3-button">1</a>
-                <a href="#" class="w3-bar-item w3-button w3-hover-black">2</a>
-                <a href="#" class="w3-bar-item w3-button w3-hover-black">3</a>
-                <a href="#" class="w3-bar-item w3-button w3-hover-black">4</a>
-                <a href="#" class="w3-bar-item w3-button w3-hover-black">»</a>
-            </div> -->
-        </div>
-
-        <!-- Modal for full size images on click-->
-        <div id="modal01" class="w3-modal w3-black" style="padding-top:0" onclick="this.style.display='none'">
-            <span class="w3-button w3-black w3-xlarge w3-display-topright">×</span>
-            <div class="w3-modal-content w3-animate-zoom w3-center w3-transparent w3-padding-64">
-                <img id="img01" class="w3-image modal-img-display">
-                <p id="caption"></p>
-            </div>
-        </div>
-
-        <!-- About section -->
-        <div class="w3-container w3-dark-grey w3-center w3-text-light-grey w3-padding-32" id="about">
-            <h4><b>About Me</b></h4>
-            <img src="https://toushifcodes.w3spaces.com/preview.jpg" alt="Me" class="w3-image w3-padding-32" width="600" height="650">
-            <div class="w3-content w3-justify" style="max-width:600px">
-                <h4>Hi there 👋</h4>
-                <p>I am a Frontend turned Full-stack Developer/Software Engineer with 5.3 years of Enterprise level experience, graduate of Information Technology and in Love with JavaScript. 
-                    I have worked full time with organisations like <b>IBM</b> and <b>Cognizant</b> over 
-                    the past 5+ years, and worked with different clients like 
-                    <b>Daimler, Mercedez Benz, Maersk Line, British American Tobacco, Standard Insurance Company, LPL Financial</b>, etc. to help create their Web products.
-                    I create <b>Robust</b>, <b>Scalable</b> <b>and Successful Websites/Web Applications</b> that are fast, easy to use, and built with best coding practices.
-                <p/>
-                <p>
-                    I work to make a better web; one that is fast, easy to use, beautiful, accessible to ALL with full <abbr title="American Disability Act">ADA</abbr> compliance, and frustration-free. 
-                    Regardless of your specific business requirements, in solving these challenges, you have a great chance of finding success online working with me.
-                <p/>
-                <p>
-                    I specialize in <b>JavaScript, React, Angular, TypeScript, NodeJS, Express, MpngoDB, etc</b>.
-                    My main experience is in front-end development but I also have a passion for designing a fast and scalable Back-end architecture. 
-                    Given that producing a modern website requires the combination of design, server technology, and the layer that users interacts with, 
-                    I believe having experience in both design and development allows for making the most optimal user experiences.
-                </p>
-                <p>mail: toushif.haq@gmail.com</p>
-                <p>tel: +91 8981288955</p>
-                <hr class="w3-opacity">
-                <h4 class="w3-padding-16">Primary Technical Skills</h4>
-                <p class="w3-wide">JavaScript</p>
-                <div class="w3-white">
-                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:90%">90%</div>
-                </div>
-                <p class="w3-wide">React</p>
-                <div class="w3-white">
-                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:95%">95%</div>
-                </div>
-                <p class="w3-wide">Angular</p>
-                <div class="w3-white">
-                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:90%">90%</div>
-                </div>
-                <p class="w3-wide">NodeJS</p>
-                <div class="w3-white">
-                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:80%">80%</div>
-                </div>
-                <p class="w3-wide">Go Lang</p>
-                <div class="w3-white">
-                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:80%">40%</div>
-                </div>
-                <p class="w3-wide">TypeScript</p>
-                <div class="w3-white">
-                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:95%">95%</div>
-                </div>
-                <p class="w3-wide">HTML/CSS/SASS</p>
-                <div class="w3-white">
-                    <div class="w3-container w3-padding-small w3-center w3-grey" style="width:95%">95%</div>
-                </div>
-                <p>
-                    <button class="w3-button w3-light-grey w3-padding-large w3-margin-top w3-margin-bottom" onclick="DownloadFile('Toushif_Resume.pdf')">Download
-                        Resume</button>
-                </p>
-                <hr class="w3-opacity">
-
-                <h4 class="w3-padding-16" id="work">All Personal Github related stuffs...</h4>
-                <div class="w3-row-padding" style="margin:0 -16px">
-                    <div class="sub-wrapper w3-margin-bottom">
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">GreenyTale</li>
-                                <li class="w3-padding-16">React, Nodejs, Fastify, IBM Cloudant DB, Watson Discovery AI, Google Auth, JSX, SASS</li>
-                                <li class="w3-padding-16">
-                                    <h6>GreenyTale is an e-commerce web platform which addresses the problem of goal number 12 of UN and provides solution to sustainable consumption and production patterns in muliple ways. GreenyTale attempts not only to create a circular economy around the world but also make a strong ethical and ecological impression on the users to aim self sustainance.</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="https://greenitale.herokuapp.com/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Ginger Movies</li>
-                                <li class="w3-padding-16">NodeJS, Express, JavaScript, Passport, EJS, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>Another movies app! Get all the latest movies and find any movie across any genre or language and look up it's details and more!</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="https://ginger-movies.herokuapp.com/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="sub-wrapper w3-margin-bottom">
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Ginger Space - web messenger</li>
-                                <li class="w3-padding-16">Socket.io, NodeJS, Express, JavaScript, Jade, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>A Web Messenger where you can chat with anyone arounf the world! Just create a room and share the unique code.</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="https://ginger-space.herokuapp.com/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Weather App</li>
-                                <li class="w3-padding-16">NodeJS, Express, JavaScript, TypeScript, Handlebars, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>A Weather web app which gives you all the weather related details inReal Time for any location around the world!</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="https://weather-web-node.herokuapp.com/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="sub-wrapper w3-margin-bottom">
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">First Website!</li>
-                                <li class="w3-padding-16">HTML, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>My first static website i created using HTML and CSS</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="/static-website-sample/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Classic Snake Game</li>
-                                <li class="w3-padding-16">JavaScript, HTML, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>Classical Snake Game web version using pure JavaScript</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="/snake-game-js/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="sub-wrapper w3-margin-bottom">
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Credit Card Validation</li>
-                                <li class="w3-padding-16">JavaScript, HTML, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>Credit Card Validation with Input form with different inputs and validations</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="/card-validation-form/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Snake and Ladder</li>
-                                <li class="w3-padding-16">JavaScript, HTML, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>A board snake and ladder simulation game where there are N nuber of players with M size board matrix. This game will find out the winner!</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="/snake-and-ladder/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="sub-wrapper w3-margin-bottom">
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Canvas JS</li>
-                                <li class="w3-padding-16">JavaScript, HTML, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>Play with the little wizard in my Canvas!</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="/canvas-js/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Analog Clock</li>
-                                <li class="w3-padding-16">JavaScript, HTML, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>Just a clock ticking - each and everything using HTML, CSS and JS.</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="/analog-clock-javascript/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                    <div class="sub-wrapper w3-margin-bottom">
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Infinite Scroll Intersection Observer</li>
-                                <li class="w3-padding-16">JavaScript, INtersection Observer, Custom Tags, HTML, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>Infinite scrolling optimized using JavaScript Intersection Observer API.</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="/infinte-scrolling-intersection-observer/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="w3-half work-inner-wrapper">
-                            <ul class="w3-ul w3-white w3-center w3-opacity w3-hover-opacity-off">
-                                <li class="w3-black w3-xlarge w3-padding-32">Flash Cards</li>
-                                <li class="w3-padding-16">JavaScript, HTML, CSS</li>
-                                <li class="w3-padding-16">
-                                    <h6>Flash cards - By tapping the cards it displays the corresponding meaning/translation/etc. In this case I am just display the same content by reversing the string.</h6>
-                                </li>
-                                <li class="w3-light-grey w3-padding-24">
-                                    <a href="/flash-cards/" target="_blank" class="w3-button w3-white w3-padding-large">Visit</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Contact section -->
-        <div class="w3-container w3-light-grey w3-padding-32 w3-padding-large" id="contact">
-            <div class="w3-content" style="max-width:600px">
-                <h4 class="w3-center"><b>Contact Me</b></h4>
-                <p>Do you want me to create your websites/web applications? Fill out the form and fill me in with the details :) I love meeting
-                    new people!</p>
-                <form action="/action_page.php" target="_blank">
-                    <div class="w3-section">
-                        <label>Name</label>
-                        <input class="w3-input w3-border" type="text" name="Name" id="message-name" required>
-                    </div>
-                    <div class="w3-section">
-                        <label>Email</label>
-                        <input class="w3-input w3-border" type="text" name="Email" id="message-email" required>
-                    </div>
-                    <div class="w3-section">
-                        <label>Message</label>
-                        <input class="w3-input w3-border" type="text" name="Message" id="message-body" required>
-                    </div>
-                    <button type="submit" class="w3-button w3-block w3-black w3-margin-bottom" onclick="sendMail()">Send Message</button>
-                </form>
-            </div>
-        </div>
-
-        <!-- Footer -->
-        <footer class="w3-container w3-padding-32 w3-grey">
-            <div class="w3-row-padding">
-                <div class="w3-quarter">
-                    <h3>INFO</h3>
-                    <p>This website is in progress with incomplete data. Tonnes to be updated, Keep an eye! ;)</p>
-                </div>
-                
-                <div class="w3-quarter">
-                    <h3>CONTACT</h3>
-                    <div>mail: toushif.haq@gmail.com</div>
-                    <div>tel: +91 8981288955</div>
-                </div>
-
-                <div class="w3-quarter">
-                    <h3>BLOG POSTS</h3>
-                    <ul class="w3-ul">
-                        <li class="w3-padding-16 w3-hover-black">
-                            <img src="https://toushifcodes.w3spaces.com/workshop.jpeg" class="w3-left w3-margin-right" style="width:50px">
-                            <span class="w3-large">JavaScript</span><br>
-                            <span>In Progres...</span>
-                        </li>
-                        <!-- <li class="w3-padding-16 w3-hover-black">
-                            <img src="gondol.jpeg" class="w3-left w3-margin-right" style="width:50px">
-                            <span class="w3-large">Ipsum</span><br>
-                            <span>Praes tinci sed</span>
-                        </li> -->
-                    </ul>
-                </div>
-
-                <div class="w3-quarter">
-                    <h3>POPULAR TAGS</h3>
-                    <p>
-                        <span class="w3-tag w3-black w3-margin-bottom">Coding</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">JavaScript</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">React</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Angular</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">NodeJS</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Go Lang</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">SQL</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Vue</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Express</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Front-End Programming</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">DevOps</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">React Native</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Kotlin</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Swift</span>
-                        <span class="w3-tag w3-dark-grey w3-small w3-margin-bottom">Mobilty</span>
+            <!-- About Me Section -->
+            <section id="about" class="mb-16 scroll-mt-24">
+                <div class="bg-lightest p-8 rounded-xl shadow-lg transition hover:shadow-2xl">
+                    <h2 class="text-3xl font-bold text-dark-text mb-4">About Me</h2>
+                    <p class="text-lg text-dark-text leading-relaxed">
+                        Hi there 👋 I am a Frontend turned Full-stack Developer/Software Engineer with 9 years of Enterprise-level experience, graduate of Information Technology, postgraduate in Cloud computing and pursuing masters in Artificial Intelligence, and in Love with JavaScript. I have worked full time with organisations like IBM, Cognizant, L&TMindtree over the past 9+ years, and worked with different clients like Arista Networks, Daimler, Mercedez Benz, Maersk Line, British American Tobacco, Standard Insurance Company, LPL Financial, etc. to help create their Web products. I create Robust, Scalable and Successful Websites/Web Applications that are fast, easy to use, and built with best coding practices.
+                        <br><br>
+                        I work to make the best web apps; one that is fast, easy to use, beautiful, accessible to ALL with full ADA compliance, and frustration-free. Regardless of your specific business requirements, in solving these challenges, you have a great chance of finding success online working with me.
+                        <br><br>
+                        I specialize in JavaScript, React, Python, Angular, TypeScript, NodeJS, Express, MongoDB, etc. My main experience is in front-end development but I also have a passion for designing a fast and scalable Back-end architecture. Given that producing a modern website requires the combination of design, server technology, and the layer that users interacts with, I believe having experience in both design and development allows for making the most optimal user experiences.
                     </p>
+                    <div class="mt-6 border-t pt-6 border-light-accent">
+                        <h3 class="text-xl font-semibold text-dark-text mb-2">Connect Directly</h3>
+                        <p class="text-dark-text">📞 **Phone:** +91-8981288955</p>
+                        <p class="text-dark-text">📧 **Email:** toushif.haq@gmail.com</p>
+                    </div>
                 </div>
-            </div>
-        </footer>
+            </section>
+            
+            <!-- Summary Section -->
+            <section id="summary" class="mb-16 scroll-mt-24">
+                <div class="bg-lightest p-8 rounded-xl shadow-lg transition hover:shadow-2xl">
+                    <h2 class="text-3xl font-bold text-dark-text mb-4">Summary</h2>
+                    <p class="text-lg text-dark-text leading-relaxed">
+                        Results-driven Module Lead and IT specialist with 9 years of experience in architecting, developing, and optimizing high-performance web applications. I leverage deep expertise in React (7+ years) and Angular (2.3 years), alongside a strong command of design patterns, data structures, and OOP (C++/Python), to lead teams and deliver robust, scalable solutions that significantly improve performance and user experience. My goal is to translate complex business requirements into intuitive, efficient, and impactful digital products.
+                    </p>
+                    <div class="mt-6 flex flex-wrap gap-4">
+                        <a href="https://www.linkedin.com/in/toushif-haq/" target="_blank" class="bg-light-accent text-darkest-bg px-4 py-2 rounded-full text-sm font-medium hover:bg-dark-accent hover:text-lightest transition">LinkedIn</a>
+                        <a href="https://github.com/Toushif" target="_blank" class="bg-light-accent text-darkest-bg px-4 py-2 rounded-full text-sm font-medium hover:bg-dark-accent hover:text-lightest transition">GitHub</a>
+                        <a href="https://toushif.github.io/" target="_blank" class="bg-light-accent text-darkest-bg px-4 py-2 rounded-full text-sm font-medium hover:bg-dark-accent hover:text-lightest transition">Portfolio</a>
+                    </div>
+                </div>
+            </section>
 
-        <div class="w3-black w3-center w3-padding-24">Powered by <a onclick="return false;" href="javascript.void(0)"
-                title="W3.CSS" target="_blank" class="w3-hover-opacity">Toushif @ 2022</a></div>
+            <!-- Skills Section -->
+            <section id="skills" class="mb-16 scroll-mt-24">
+                <h2 class="text-3xl font-bold text-center text-dark-text mb-2">Technical Skills</h2>
+                <p class="text-center text-dark-accent mb-8">A snapshot of my technical proficiency. Use the filters to explore different skill areas.</p>
+                <div class="flex justify-center mb-8 space-x-2 flex-wrap">
+                    <button class="skill-btn active px-4 py-2 bg-lightest text-dark-text rounded-full shadow-sm hover:bg-light-accent transition" onclick="filterSkills('all')">All</button>
+                    <button class="skill-btn px-4 py-2 bg-lightest text-dark-text rounded-full shadow-sm hover:bg-light-accent transition" onclick="filterSkills('frontend')">Frontend</button>
+                    <button class="skill-btn px-4 py-2 bg-lightest text-dark-text rounded-full shadow-sm hover:bg-light-accent transition" onclick="filterSkills('backend')">Backend & DB</button>
+                    <button class="skill-btn px-4 py-2 bg-lightest text-dark-text rounded-full shadow-sm hover:bg-light-accent transition" onclick="filterSkills('tools')">Tools & DevOps</button>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="skills-grid">
+                    <!-- Skills will be dynamically inserted here -->
+                </div>
+                <div class="mt-12">
+                     <h3 class="text-2xl font-bold text-center text-dark-text mb-4">Skill Proficiency</h3>
+                     <div class="bg-lightest p-6 rounded-xl shadow-lg">
+                        <div class="chart-container">
+                            <canvas id="skillProficiencyChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
 
-        <!-- End page content -->
+            <!-- Experience Section -->
+            <section id="experience" class="mb-16 scroll-mt-24">
+                <h2 class="text-3xl font-bold text-center text-dark-text mb-2">Professional Experience</h2>
+                <p class="text-center text-dark-accent mb-12">An interactive timeline of my career journey. Click on any role to see the details.</p>
+                <div class="relative" id="experience-timeline">
+                    <!-- Timeline items will be injected here -->
+                </div>
+            </section>
+
+            <!-- Education & Certifications Section -->
+            <section id="education" class="mb-16 scroll-mt-24">
+                 <h2 class="text-3xl font-bold text-center text-dark-text mb-8">Education & Certifications</h2>
+                 <div class="grid md:grid-cols-2 gap-8">
+                    <div class="bg-lightest p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-dark-text mb-4">Education</h3>
+                        <div class="space-y-4">
+                            <div>
+                                <p class="font-semibold text-lg">Post Graduate Program in Cloud Computing</p>
+                                <p class="text-dark-accent">California Institute of Technology (Caltech) — 2024</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-lg">Bachelor of Technology in Information Technology</p>
+                                <p class="text-dark-accent">MCKV Institute of Engineering, India — 2016</p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="bg-lightest p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-dark-text mb-4">Certifications</h3>
+                        <ul class="list-disc list-inside text-dark-text space-y-2">
+                            <li>Angular (Hackerrank)</li>
+                            <li>React (Hackerrank)</li>
+                            <li>JavaScript Internals (Udemy)</li>
+                            <li>NodeJS (Udemy)</li>
+                            <li>TypeScript (Udemy)</li>
+                            <li>Application Developer - Mobile Hybrid (IBM)</li>
+                        </ul>
+                    </div>
+                 </div>
+            </section>
+
+            <!-- Documents Section -->
+            <section id="documents" class="mb-16 scroll-mt-24">
+                <h2 class="text-3xl font-bold text-center text-dark-text mb-8">Documents & Certificates</h2>
+                <div class="bg-lightest p-8 rounded-xl shadow-lg">
+                    <button class="w-full text-left font-bold text-xl text-dark-text py-4 px-4 rounded-lg bg-light-accent hover:bg-dark-accent hover:text-lightest transition duration-300 flex justify-between items-center" onclick="toggleDocuments()">
+                        View My Certificates
+                        <span id="document-toggle-icon">▲</span>
+                    </button>
+                    <div id="documents-content" class="mt-6">
+                        <p class="text-dark-accent text-center mb-6">Explore a selection of my certifications and achievements.</p>
+                        <div class="carousel-container">
+                            <div class="carousel-slides" id="certificate-carousel">
+                                <!-- Certificate images will be injected here -->
+                            </div>
+                            <button class="carousel-button left" onclick="prevSlide()">&#10094;</button>
+                            <button class="carousel-button right" onclick="nextSlide()">&#10095;</button>
+                        </div>
+                        <div class="text-center text-sm text-dark-accent mt-4" id="carousel-caption"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Contact Me Section -->
+            <section id="contact" class="mb-16 scroll-mt-24">
+                <div class="bg-lightest p-8 rounded-xl shadow-lg">
+                    <h2 class="text-3xl font-bold text-center text-dark-text mb-4">Contact Me</h2>
+                    <p class="text-center text-dark-accent mb-8 max-w-2xl mx-auto">
+                        Do you want me to create your websites/web applications? Fill out the form and fill me in with the details :) I love meeting new people!
+                    </p>
+                    <form id="contactForm" class="max-w-md mx-auto space-y-4">
+                        <div>
+                            <label for="name" class="block text-dark-text text-sm font-semibold mb-2">Name:</label>
+                            <input type="text" id="name" name="name" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent" required>
+                            <p id="nameError" class="text-dark-accent text-sm mt-1 hidden">Name is required.</p>
+                        </div>
+                        <div>
+                            <label for="email" class="block text-dark-text text-sm font-semibold mb-2">Email:</label>
+                            <input type="email" id="email" name="email" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent" required>
+                            <p id="emailError" class="text-dark-accent text-sm mt-1 hidden">A valid email is required.</p>
+                        </div>
+                        <div>
+                            <label for="phone" class="block text-dark-text text-sm font-semibold mb-2">Phone (Optional):</label>
+                            <input type="tel" id="phone" name="phone" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent">
+                        </div>
+                        <div>
+                            <label for="message" class="block text-dark-text text-sm font-semibold mb-2">Message:</label>
+                            <textarea id="message" name="message" rows="5" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent" required></textarea>
+                            <p id="messageError" class="text-dark-accent text-sm mt-1 hidden">Message is required.</p>
+                        </div>
+                        <button type="submit" class="w-full bg-dark-accent text-lightest font-bold py-3 rounded-lg hover:bg-dark-accent-hover transition duration-300 shadow-md">Send Message</button>
+                    </form>
+                </div>
+            </section>
+
+        </main>
     </div>
 
-</body>
+    <!-- Contact Modal -->
+    <div id="contactModal" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeContactModal()">&times;</span>
+            <h2 class="text-3xl font-bold text-center text-dark-text mb-4">Get in Touch!</h2>
+            <p class="text-center text-dark-accent mb-8">
+                Do you want me to create your websites/web applications? Fill out the form and fill me in with the details :) I love meeting new people!
+            </p>
+            <form id="contactModalForm" class="max-w-md mx-auto space-y-4">
+                <div>
+                    <label for="modalName" class="block text-dark-text text-sm font-semibold mb-2">Name:</label>
+                    <input type="text" id="modalName" name="name" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent" required>
+                    <p id="modalNameError" class="text-dark-accent text-sm mt-1 hidden">Name is required.</p>
+                </div>
+                <div>
+                    <label for="modalEmail" class="block text-dark-text text-sm font-semibold mb-2">Email:</label>
+                    <input type="email" id="modalEmail" name="email" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent" required>
+                    <p id="modalEmailError" class="text-dark-accent text-sm mt-1 hidden">A valid email is required.</p>
+                </div>
+                <div>
+                    <label for="modalPhone" class="block text-dark-text text-sm font-semibold mb-2">Phone (Optional):</label>
+                    <input type="tel" id="modalPhone" name="phone" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent">
+                </div>
+                <div>
+                    <label for="modalMessage" class="block text-dark-text text-sm font-semibold mb-2">Message:</label>
+                    <textarea id="modalMessage" name="message" rows="5" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent" required></textarea>
+                    <p id="modalMessageError" class="text-dark-accent text-sm mt-1 hidden">Message is required.</p>
+                </div>
+                <button type="submit" class="w-full bg-dark-accent text-lightest font-bold py-3 rounded-lg hover:bg-dark-accent-hover transition duration-300 shadow-md">Send Message</button>
+            </form>
+        </div>
+    </div>
 
+    <script>
+        const skillsData = [
+            { name: 'JavaScript (ES6+)', category: 'frontend', icon: '&#x1F4BB;' }, /* Laptop */
+            { name: 'TypeScript', category: 'frontend', icon: '&#x1F4D3;' }, /* Notebook */
+            { name: 'React', category: 'frontend', icon: '&#x269B;&#xFE0F;' }, /* Atom Symbol */
+            { name: 'Angular', category: 'frontend', icon: '&#x25B2;' }, /* Up-pointing triangle */
+            { name: 'NextJS', category: 'frontend', icon: '&#x23E9;' }, /* Fast-Forward */
+            { name: 'Redux', category: 'frontend', icon: '&#x2B07;&#xFE0F;' }, /* Down Arrow */
+            { name: 'HTML5 & CSS3', category: 'frontend', icon: '&#x1F4BB;' },
+            { name: 'Tailwind CSS', category: 'frontend', icon: '&#x1F30B;' }, /* Volcano */
+            { name: 'SASS', category: 'frontend', icon: '&#x2728;' }, /* Sparkles */
+            { name: 'NodeJS', category: 'backend', icon: '&#x1F333;' }, /* Deciduous Tree */
+            { name: 'Python', category: 'backend', icon: '&#x1F40D;' }, /* Snake */
+            { name: 'Golang', category: 'backend', icon: '&#x1F41F;' }, /* Fish */
+            { name: 'Express', category: 'backend', icon: '&#x1F680;' }, /* Rocket */
+            { name: 'SQL', category: 'backend', icon: '&#x1F4C4;' }, /* Page Facing Up */
+            { name: 'MongoDB', category: 'backend', icon: '&#x1F4C6;' }, /* Calendar */
+            { name: 'GIT', category: 'tools', icon: '&#x1F4C3;' }, /* Page With Curl */
+            { name: 'Webpack', category: 'tools', icon: '&#x1F4E6;' }, /* Package */
+            { name: 'Docker', category: 'tools', icon: '&#x1F433;' }, /* Spouting Whale */
+            { name: 'Azure DevOps', category: 'tools', icon: '&#x2699;&#xFE0F;' }, /* Gear */
+            { name: 'Jira', category: 'tools', icon: '&#x1F4CB;' }, /* Clipboard */
+            { name: 'Cypress', category: 'tools', icon: '&#x1F3C1;' }, /* Chequered Flag */
+            { name: 'JMeter', category: 'tools', icon: '&#x26A1;' }, /* High Voltage */
+        ];
+
+        const experienceData = [
+            {
+                date: 'Dec 2021 – Present',
+                role: 'Module Lead',
+                company: 'LTIMindtree Ltd',
+                client: 'Arista Networks',
+                details: [
+                    "Architected and spearheaded end-to-end frontend development of a critical Navigation Tool, applying optimal UI design patterns to create a scalable architecture that significantly streamlined internal user workflows.",
+                    "Leveraged React Query for efficient data management and caching, and employed GraphQL Relay for robust backend communication.",
+                    "Achieved a 40% enhancement in web application performance through strategic custom Webpack configurations.",
+                    "Successfully scaled the internal daily user count from approximately 50 to over 2,300 within 23 months."
+                ]
+            },
+            {
+                date: 'Jan 2020 – Nov 2021',
+                role: 'Senior Project Associate',
+                company: 'Cognizant Technology Solutions',
+                client: 'LPL Financial',
+                details: [
+                    "Guided and mentored a team of 10+ Angular developers in successfully developing critical large-scale enterprise web applications.",
+                    "Spearheaded the solutioning and architectural design of the entire Front-end system, applying advanced JavaScript design patterns.",
+                    "Designed and published a common enterprise-level Angular library (Angular 9), hosting reusable components to streamline development.",
+                    "Managed the complete application lifecycle using Microsoft TFS/Azure DevOps and automated deployments with Microsoft Octopus."
+                ]
+            },
+            {
+                date: 'Sep 2019 – Dec 2019',
+                role: 'Experienced Frontend Developer',
+                company: 'IBM India Pvt Ltd',
+                client: 'Standard Insurance Company',
+                details: [
+                    "Led a team of 4 Angular developers in the complex migration of a legacy Struts-based application to a modern Angular 7.3 and Spring MVC architecture.",
+                    "Managed the project workflow, including requirements gathering, task assignment, and delivery of critical components via lazy loading.",
+                    "Improved Lighthouse Report performance by over 40% through strategic Webpack optimization."
+                ]
+            },
+            {
+                date: 'Oct 2018 – Aug 2019',
+                role: 'Experienced Frontend Developer',
+                company: 'IBM India Pvt Ltd',
+                client: 'British American Tobacco',
+                details: [
+                    "Independently developed a comprehensive Web Application Portal from inception using Angular 7.",
+                    "Conceptualized the entire UI/UX in the absence of pre-existing wireframes.",
+                    "Conducted rigorous load testing with JMeter and smoke testing with Postman."
+                ]
+            },
+            {
+                date: 'Feb 2018 – Sep 2018',
+                role: 'Experienced Frontend Developer',
+                company: 'IBM India Pvt Ltd',
+                client: 'MAERSK LINE (DAMCO)',
+                details: [
+                    "Developed critical web portals for \"PO Collaboration\" and \"Sourcing Optimization\" projects using the raw ReactJS framework.",
+                    "Adhered strictly to Agile methodology and utilized VSTS for collaborative development."
+                ]
+            },
+            {
+                date: 'Aug 2016 – Jan 2018',
+                role: 'Mobile Hybrid Application Developer',
+                company: 'IBM India Pvt Ltd',
+                client: 'DAIMLER',
+                details: [
+                    "Developed responsive web application portals for Daimler's Mercedes Service Booking and Korea Loyalty programs using ReactJS with Redux.",
+                    "Implemented significant performance optimizations through advanced Webpack configurations.",
+                    "Ensured backward compatibility across diverse browsers using Corejs and polyfills."
+                ]
+            }
+        ];
+
+        const certificatesData = [
+            { src: "https://placehold.co/600x400/52796F/cad2c5?text=Cert+1:+Web+Development", caption: "Certificate in Advanced Web Development" },
+            { src: "https://placehold.co/600x400/84A98C/2F3E46?text=Cert+2:+Cloud+Computing", caption: "Cloud Computing Specialization" },
+            { src: "https://placehold.co/600x400/354F52/cad2c5?text=Cert+3:+React+Mastery", caption: "React Framework Mastery" },
+            { src: "https://placehold.co/600x400/2F3E46/cad2c5?text=Cert+4:+Agile+Methodologies", caption: "Agile Project Management" },
+            { src: "https://placehold.co/600x400/52796F/cad2c5?text=Cert+5:+Data+Structures", caption: "Data Structures & Algorithms" }
+        ];
+
+        let currentSlide = 0;
+        let carouselInterval;
+
+        function renderSkills(category = 'all') {
+            const skillsGrid = document.getElementById('skills-grid');
+            skillsGrid.innerHTML = '';
+            const filteredSkills = category === 'all' ? skillsData : skillsData.filter(skill => skill.category === category);
+            
+            filteredSkills.forEach(skill => {
+                const skillEl = document.createElement('div');
+                skillEl.className = 'skill-item-card p-4 rounded-lg shadow-sm flex items-center space-x-3 text-center font-medium';
+                skillEl.innerHTML = `<span class="text-xl">${skill.icon}</span><span>${skill.name}</span>`;
+                skillsGrid.appendChild(skillEl);
+            });
+        }
+
+        function filterSkills(category) {
+            document.querySelectorAll('.skill-btn').forEach(btn => btn.classList.remove('active', 'bg-dark-accent', 'text-lightest'));
+            const activeButton = document.querySelector(`.skill-btn[onclick="filterSkills('${category}')"]`);
+            if (activeButton) {
+                activeButton.classList.add('active', 'bg-dark-accent', 'text-lightest');
+            }
+            renderSkills(category);
+        }
+
+        function renderExperience() {
+            const timeline = document.getElementById('experience-timeline');
+            timeline.innerHTML = '';
+            experienceData.forEach((exp, index) => {
+                const item = document.createElement('div');
+                item.className = 'timeline-item relative pl-10 pb-8';
+                item.innerHTML = `
+                    <div class="absolute left-0 top-0 flex items-center justify-center bg-dark-accent rounded-full h-10 w-10 text-lightest font-bold shadow-md">
+                        ${experienceData.length - index}
+                    </div>
+                    <div class="ml-5 bg-lightest p-6 rounded-xl shadow-lg cursor-pointer transition hover:shadow-2xl" onclick="toggleDetails(this)">
+                        <p class="text-sm text-dark-accent font-semibold">${exp.date}</p>
+                        <h3 class="text-xl font-bold text-dark-text mt-1">${exp.role}</h3>
+                        <p class="text-dark-accent">${exp.company} <span class="text-light-accent">| Client: ${exp.client}</span></p>
+                        <div class="details mt-4 text-dark-text space-y-2 hidden">
+                           ${exp.details.map(d => `<p class="flex items-start"><span class="text-dark-accent mr-2 mt-1">&#10003;</span><span>${d}</span></p>`).join('')}
+                        </div>
+                    </div>
+                `;
+                timeline.appendChild(item);
+            });
+        }
+
+        function toggleDetails(element) {
+            const details = element.querySelector('.details');
+            const isOpen = !details.classList.contains('hidden');
+            
+            document.querySelectorAll('#experience-timeline .details').forEach(d => {
+                if(d !== details) d.classList.add('hidden');
+            });
+
+            details.classList.toggle('hidden');
+        }
+        
+        function renderSkillChart() {
+            const ctx = document.getElementById('skillProficiencyChart').getContext('2d');
+            const chart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: ['React', 'Angular', 'JavaScript/TS', 'System Design', 'Backend Dev', 'Testing & QA'],
+                    datasets: [{
+                        label: 'Proficiency',
+                        data: [9, 8, 9, 8, 7, 8],
+                        backgroundColor: 'rgba(82, 121, 111, 0.2)', /* hookers-green with alpha */
+                        borderColor: 'rgba(82, 121, 111, 1)', /* hookers-green */
+                        borderWidth: 2,
+                        pointBackgroundColor: 'rgba(82, 121, 111, 1)',
+                        pointBorderColor: '#fff',
+                        pointHoverBackgroundColor: '#fff',
+                        pointHoverBorderColor: 'rgba(82, 121, 111, 1)'
+                    }]
+                },
+                options: {
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 14,
+                                    weight: 'bold'
+                                },
+                                color: 'var(--color-dark-text)'
+                            },
+                            ticks: {
+                                beginAtZero: true,
+                                max: 10,
+                                stepSize: 2,
+                                backdropColor: 'rgba(255, 255, 255, 0.75)',
+                                color: 'var(--color-dark-accent)'
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Debounce variable for scrollspy
+        let scrollTimeout;
+
+        function handleScrollspy() {
+            // Clear any existing timeout to debounce the function call
+            clearTimeout(scrollTimeout);
+            scrollTimeout = setTimeout(() => {
+                const sections = document.querySelectorAll('section');
+                const navLinks = document.querySelectorAll('.nav-link');
+                
+                let currentSectionId = '';
+                const scrollThreshold = 100; // Offset for when a section becomes active
+
+                // Iterate sections in reverse order to find the topmost visible section
+                for (let i = sections.length - 1; i >= 0; i--) {
+                    const section = sections[i];
+                    if (window.scrollY + section.offsetHeight > section.offsetTop + scrollThreshold &&
+                        window.scrollY < section.offsetTop + section.offsetHeight - scrollThreshold) {
+                        currentSectionId = section.getAttribute('id');
+                        break; // Found the active section, exit loop
+                    }
+                }
+
+                // Remove 'active' class from all nav links first
+                navLinks.forEach(link => {
+                    link.classList.remove('active', 'bg-dark-accent');
+                });
+
+                // Add 'active' class only to the link corresponding to the current section
+                if (currentSectionId) { // Ensure currentSectionId is not empty
+                    const activeLink = document.querySelector(`.nav-link[href="#${currentSectionId}"]`);
+                    if (activeLink) {
+                        activeLink.classList.add('active', 'bg-dark-accent');
+                    }
+                }
+            }, 50); // Debounce by 50ms
+        }
+
+        // Function to handle smooth scrolling and immediate active state on click
+        function scrollToSection(event, sectionId) {
+            event.preventDefault(); // Prevent default jump behavior
+            document.getElementById(sectionId).scrollIntoView({ behavior: 'smooth' });
+
+            // Manually set active class immediately on click for instant feedback
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active', 'bg-dark-accent');
+            });
+            const clickedLink = document.querySelector(`.nav-link[href="#${sectionId}"]`);
+            if (clickedLink) {
+                clickedLink.classList.add('active', 'bg-dark-accent');
+            }
+            // The debounced handleScrollspy will then take over to re-evaluate on scroll end
+        }
+
+
+        function toggleDocuments() {
+            const content = document.getElementById('documents-content');
+            const icon = document.getElementById('document-toggle-icon');
+            // Check if it's currently hidden. If so, show it and start carousel. If not, hide it and stop carousel.
+            if (content.classList.contains('hidden')) {
+                content.classList.remove('hidden');
+                icon.textContent = '▲';
+                currentSlide = 0; // Reset to first slide
+                showSlide(currentSlide);
+                startCarousel();
+            } else {
+                content.classList.add('hidden');
+                icon.textContent = '▼';
+                clearInterval(carouselInterval);
+            }
+        }
+
+        function renderCertificates() {
+            const carousel = document.getElementById('certificate-carousel');
+            carousel.innerHTML = '';
+            certificatesData.forEach(cert => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                const img = document.createElement('img');
+                img.src = cert.src;
+                img.alt = cert.caption;
+                img.onerror = function() { this.src = 'https://placehold.co/600x400/84A98C/2F3E46?text=Image+Error'; }; // Fallback with new palette
+                slide.appendChild(img);
+                carousel.appendChild(slide);
+            });
+            showSlide(currentSlide);
+        }
+
+        function showSlide(index) {
+            const slides = document.querySelectorAll('.carousel-slide');
+            const totalSlides = slides.length;
+            if (index >= totalSlides) {
+                currentSlide = 0;
+            } else if (index < 0) {
+                currentSlide = totalSlides - 1;
+            } else {
+                currentSlide = index;
+            }
+            const carousel = document.getElementById('certificate-carousel');
+            carousel.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.getElementById('carousel-caption').textContent = certificatesData[currentSlide].caption;
+        }
+
+        function nextSlide() {
+            showSlide(currentSlide + 1);
+        }
+
+        function prevSlide() {
+            showSlide(currentSlide - 1);
+        }
+
+        function startCarousel() {
+            clearInterval(carouselInterval); // Clear any existing interval
+            carouselInterval = setInterval(() => {
+                nextSlide();
+            }, 2000); // Change image every 2 seconds
+        }
+
+        // Contact Form Validation and Mailto Logic
+        function validateForm(formId) {
+            const nameInput = document.getElementById(formId === 'contactForm' ? 'name' : 'modalName');
+            const emailInput = document.getElementById(formId === 'contactForm' ? 'email' : 'modalEmail');
+            const messageInput = document.getElementById(formId === 'contactForm' ? 'message' : 'modalMessage');
+            const nameError = document.getElementById(formId === 'contactForm' ? 'nameError' : 'modalNameError');
+            const emailError = document.getElementById(formId === 'contactForm' ? 'emailError' : 'modalEmailError');
+            const messageError = document.getElementById(formId === 'contactForm' ? 'messageError' : 'modalMessageError');
+
+            let isValid = true;
+
+            if (nameInput.value.trim() === '') {
+                nameError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                nameError.classList.add('hidden');
+            }
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(emailInput.value.trim())) {
+                emailError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                emailError.classList.add('hidden');
+            }
+
+            if (messageInput.value.trim() === '') {
+                messageError.classList.remove('hidden');
+                isValid = false;
+            } else {
+                messageError.classList.add('hidden');
+            }
+            return isValid;
+        }
+
+        function handleSubmit(event, formId) {
+            event.preventDefault(); // Prevent default form submission
+            if (validateForm(formId)) {
+                const name = document.getElementById(formId === 'contactForm' ? 'name' : 'modalName').value;
+                const email = document.getElementById(formId === 'contactForm' ? 'email' : 'modalEmail').value;
+                const phone = document.getElementById(formId === 'contactForm' ? 'phone' : 'modalPhone').value;
+                const message = document.getElementById(formId === 'contactForm' ? 'message' : 'modalMessage').value;
+
+                let mailtoLink = `mailto:toushif.haq@gmail.com?subject=Portfolio Inquiry from ${name}&body=`;
+                let bodyContent = `Name: ${name}%0D%0AEmail: ${email}%0D%0A`;
+                if (phone) {
+                    bodyContent += `Phone: ${phone}%0D%0A`;
+                }
+                bodyContent += `Message: %0D%0A${message}`;
+                mailtoLink += encodeURIComponent(bodyContent);
+
+                window.location.href = mailtoLink;
+                
+                // Close modal if form submitted from modal
+                if (formId === 'contactModalForm') {
+                    closeContactModal();
+                }
+                // Optionally clear form fields after submission
+                document.getElementById(formId).reset();
+            }
+        }
+
+        document.getElementById('contactForm').addEventListener('submit', (event) => handleSubmit(event, 'contactForm'));
+        document.getElementById('contactModalForm').addEventListener('submit', (event) => handleSubmit(event, 'contactModalForm'));
+
+        // Modal functions
+        const contactModal = document.getElementById('contactModal');
+        function openContactModal() {
+            contactModal.style.display = 'flex'; // Use flex to center
+        }
+
+        function closeContactModal() {
+            contactModal.style.display = 'none';
+        }
+
+        window.onclick = function(event) {
+            if (event.target == contactModal) {
+                contactModal.style.display = 'none';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSkills();
+            renderExperience();
+            renderSkillChart();
+            renderCertificates();
+            // Attach scroll event listener for scrollspy
+            window.addEventListener('scroll', handleScrollspy);
+            // Initial call to set active class on load
+            handleScrollspy(); // Call once on load to set initial active state
+            filterSkills('all'); // Initialize skill filter to 'All'
+            
+            // Documents section is open by default, so start carousel
+            startCarousel(); 
+        });
+    </script>
+</body>
 </html>
