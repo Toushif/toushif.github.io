@@ -9,6 +9,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Favicon and Open Graph Image for browser tab and social sharing -->
+    <link rel="icon" href="Toushif_profile_small.jpg-3cd7c91c-cdaa-4984-8a61-1e33782184d1" type="image/jpeg">
+    <meta property="og:image" content="Toushif_profile_small.jpg-3cd7c91c-cdaa-4984-8a61-1e33782184d1">
     <!-- Chosen Palette: "Modern Verdant" - --color-darkest-bg: #2f3e46ff (charcoal - side menu, deep text); --color-dark-text: #354f52ff (dark-slate-gray - main text, headings); --color-dark-accent: #52796fff (hookers-green - active states, dark elements); --color-light-accent: #84a98cff (cambridge-blue - lighter elements, hovers); --color-lightest: #cad2c5ff (ash-gray - main background, light elements). -->
     <!-- Application Structure Plan: The portfolio is structured with a fixed left-side navigation for easy access to main sections: About Me, Summary, Skills, Experience, Education, Documents, and Contact Me. The primary content area on the right provides detailed information for each section. The interactive experience is driven by filterable skills, a collapsible experience timeline, and a dynamic image carousel for documents, all designed to make the user journey intuitive and engaging. The Contact Me form, accessible via a prominent button or modal, facilitates direct communication. -->
     <!-- Visualization & Content Choices: 
@@ -37,7 +40,7 @@
         }
         .bg-darkest-bg { background-color: var(--color-darkest-bg); }
         .text-darkest-bg { color: var(--color-darkest-bg); }
-        .bg-dark-text { background-color: var(--color-dark-text); }
+        .bg-dark-text { color: var(--color-dark-text); }
         .text-dark-text { color: var(--color-dark-text); }
         .bg-dark-accent { background-color: var(--color-dark-accent); }
         .text-dark-accent { color: var(--color-dark-accent); }
@@ -173,11 +176,69 @@
         .main-gradient-bg {
             background: linear-gradient(to bottom, var(--color-lightest) 0%, var(--color-light-accent) 30%, var(--color-dark-accent) 70%, var(--color-dark-text) 100%);
         }
+
+        /* Section Header Styling */
+        .section-header {
+            background: linear-gradient(to right, var(--color-dark-text), var(--color-dark-accent));
+            color: var(--color-lightest);
+            border: 1px solid var(--color-light-accent);
+            border-radius: 0.5rem; /* rounded-lg */
+            padding: 0.75rem 1.5rem; /* py-3 px-6 */
+            margin-bottom: 2rem; /* mb-8 */
+            display: table; /* Changed to table to fit content and allow auto margins */
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.875rem; /* text-3xl */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            margin-left: auto; /* Center the table element */
+            margin-right: auto; /* Center the table element */
+        }
+
+        /* Mobile menu specific styles */
+        #mobile-menu-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 64%; /* Adjusted width for mobile */
+            max-width: 256px; /* Max width for consistency */
+            background-color: var(--color-darkest-bg);
+            color: var(--color-lightest);
+            padding: 1.5rem;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5);
+            z-index: 50;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+            display: flex;
+            flex-direction: column;
+        }
+        #mobile-menu-nav.open {
+            transform: translateX(0);
+        }
+        #mobile-menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 49;
+            display: none;
+        }
+        #mobile-menu-overlay.open {
+            display: block;
+        }
+        body.no-scroll {
+            overflow: hidden;
+        }
     </style>
 </head>
 <body class="flex flex-col md:flex-row min-h-screen">
 
-    <!-- Left Fixed Side Menu -->
+    <!-- Mobile Menu Overlay -->
+    <div id="mobile-menu-overlay" onclick="toggleMobileMenu()"></div>
+
+    <!-- Left Fixed Side Menu (Desktop) -->
     <nav class="hidden md:flex flex-col w-64 bg-darkest-bg text-lightest p-6 fixed h-full shadow-lg z-40">
         <h1 class="text-3xl font-bold mb-8 text-lightest">Toushif UL Haque</h1>
         <div class="space-y-4 flex-grow">
@@ -194,21 +255,44 @@
         </div>
     </nav>
 
-    <!-- Header for Mobile and Top-Right for Desktop -->
+    <!-- Mobile Slide-out Menu -->
+    <nav id="mobile-menu-nav" class="md:hidden">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-lightest">Menu</h1>
+            <button class="text-lightest text-3xl leading-none" onclick="toggleMobileMenu()">&times;</button>
+        </div>
+        <div class="space-y-4 flex-grow">
+            <a href="#about" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'about'); toggleMobileMenu();">About Me</a>
+            <a href="#summary" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'summary'); toggleMobileMenu();">Summary</a>
+            <a href="#skills" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'skills'); toggleMobileMenu();">Skills</a>
+            <a href="#experience" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'experience'); toggleMobileMenu();">Experience</a>
+            <a href="#education" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'education'); toggleMobileMenu();">Education</a>
+            <a href="#documents" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'documents'); toggleMobileMenu();">Documents</a>
+            <a href="#contact" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'contact'); toggleMobileMenu();">Contact Me</a>
+        </div>
+    </nav>
+
+
+    <!-- Main Content Area -->
     <div class="flex-grow flex flex-col md:ml-64">
         <header class="bg-lightest/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
-            <nav class="container mx-auto px-6 py-4 flex justify-end items-center space-x-4">
-                <a href="https://docs.google.com/document/d/18WgMw3YR8yD6GlPq8eBicC_LqFm1YsXxcKSrAXb9u7k/export?format=pdf" target="_blank" rel="noopener noreferrer" class="bg-dark-accent text-lightest px-4 py-2 rounded-lg hover:bg-dark-accent-hover transition">Download Resume</a>
-                <button class="bg-dark-accent text-lightest px-4 py-2 rounded-lg hover:bg-dark-accent-hover transition" onclick="openContactModal()">Contact Me</button>
+            <nav class="container mx-auto px-6 py-4 flex items-center justify-between md:justify-end">
+                <!-- Hamburger icon for mobile -->
+                <button class="md:hidden text-dark-text text-3xl leading-none" onclick="toggleMobileMenu()">&#x2630;</button>
+                <div class="flex space-x-4">
+                    <a href="https://docs.google.com/document/d/18WgMw3YR8yD6GlPq8eBicC_LqFm1YsXxcKSrAXb9u7k/export?format=pdf" target="_blank" rel="noopener noreferrer" class="bg-dark-accent text-lightest px-4 py-2 rounded-lg hover:bg-dark-accent-hover transition">Download Resume</a>
+                    <button class="bg-dark-accent text-lightest px-4 py-2 rounded-lg hover:bg-dark-accent-hover transition" onclick="openContactModal()">Contact Me</button>
+                </div>
             </nav>
         </header>
 
         <main class="container mx-auto p-6 md:p-8 flex-grow main-gradient-bg">
 
             <!-- About Me Section -->
-            <section id="about" class="mb-16 scroll-mt-24">
-                <div class="bg-lightest p-8 rounded-xl shadow-lg transition hover:shadow-2xl">
-                    <h2 class="text-3xl font-bold text-dark-text mb-4">About Me</h2>
+            <section id="about" class="mb-16 scroll-mt-24 flex flex-col items-center">
+                <h2 class="section-header">About Me</h2>
+                <div class="bg-lightest p-8 rounded-xl shadow-lg transition hover:shadow-2xl w-full">
+                    <img src="Toushif_profile_small.jpg-3cd7c91c-cdaa-4984-8a61-1e33782184d1" alt="Toushif UL Haque Profile" class="w-32 h-32 rounded-full object-cover border border-darkest-bg md:float-right md:ml-6 mb-4 md:mb-0 flex-shrink-0">
                     <p class="text-lg text-dark-text leading-relaxed">
                         Hi there 👋 I am a Frontend turned Full-stack Developer/Software Engineer with 9 years of Enterprise-level experience, graduate of Information Technology, postgraduate in Cloud computing and pursuing masters in Artificial Intelligence, and in Love with JavaScript. I have worked full time with organisations like IBM, Cognizant, L&TMindtree over the past 9+ years, and worked with different clients like Arista Networks, Daimler, Mercedez Benz, Maersk Line, British American Tobacco, Standard Insurance Company, LPL Financial, etc. to help create their Web products. I create Robust, Scalable and Successful Websites/Web Applications that are fast, easy to use, and built with best coding practices.
                         <br><br>
@@ -216,7 +300,7 @@
                         <br><br>
                         I specialize in JavaScript, React, Python, Angular, TypeScript, NodeJS, Express, MongoDB, etc. My main experience is in front-end development but I also have a passion for designing a fast and scalable Back-end architecture. Given that producing a modern website requires the combination of design, server technology, and the layer that users interacts with, I believe having experience in both design and development allows for making the most optimal user experiences.
                     </p>
-                    <div class="mt-6 border-t pt-6 border-light-accent">
+                    <div class="mt-6 border-t pt-6 border-light-accent w-full clear-right">
                         <h3 class="text-xl font-semibold text-dark-text mb-2">Connect Directly</h3>
                         <p class="text-dark-text">📞 **Phone:** +91-8981288955</p>
                         <p class="text-dark-text">📧 **Email:** toushif.haq@gmail.com</p>
@@ -225,9 +309,9 @@
             </section>
             
             <!-- Summary Section -->
-            <section id="summary" class="mb-16 scroll-mt-24">
-                <div class="bg-lightest p-8 rounded-xl shadow-lg transition hover:shadow-2xl">
-                    <h2 class="text-3xl font-bold text-dark-text mb-4">Summary</h2>
+            <section id="summary" class="mb-16 scroll-mt-24 flex flex-col items-center">
+                <h2 class="section-header">Summary</h2>
+                <div class="bg-lightest p-8 rounded-xl shadow-lg transition hover:shadow-2xl w-full">
                     <p class="text-lg text-dark-text leading-relaxed">
                         Results-driven Module Lead and IT specialist with 9 years of experience in architecting, developing, and optimizing high-performance web applications. I leverage deep expertise in React (7+ years) and Angular (2.3 years), alongside a strong command of design patterns, data structures, and OOP (C++/Python), to lead teams and deliver robust, scalable solutions that significantly improve performance and user experience. My goal is to translate complex business requirements into intuitive, efficient, and impactful digital products.
                     </p>
@@ -240,19 +324,19 @@
             </section>
 
             <!-- Skills Section -->
-            <section id="skills" class="mb-16 scroll-mt-24">
-                <h2 class="text-3xl font-bold text-center text-dark-text mb-2">Technical Skills</h2>
-                <p class="text-center text-dark-accent mb-8">A snapshot of my technical proficiency. Use the filters to explore different skill areas.</p>
+            <section id="skills" class="mb-16 scroll-mt-24 flex flex-col items-center">
+                <h2 class="section-header">Technical Skills</h2>
+                <p class="text-center text-dark-text mb-8">A snapshot of my technical proficiency. Use the filters to explore different skill areas.</p>
                 <div class="flex justify-center mb-8 space-x-2 flex-wrap">
                     <button class="skill-btn active px-4 py-2 bg-lightest text-dark-text rounded-full shadow-sm hover:bg-light-accent transition" onclick="filterSkills('all')">All</button>
                     <button class="skill-btn px-4 py-2 bg-lightest text-dark-text rounded-full shadow-sm hover:bg-light-accent transition" onclick="filterSkills('frontend')">Frontend</button>
                     <button class="skill-btn px-4 py-2 bg-lightest text-dark-text rounded-full shadow-sm hover:bg-light-accent transition" onclick="filterSkills('backend')">Backend & DB</button>
                     <button class="skill-btn px-4 py-2 bg-lightest text-dark-text rounded-full shadow-sm hover:bg-light-accent transition" onclick="filterSkills('tools')">Tools & DevOps</button>
                 </div>
-                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4" id="skills-grid">
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 w-full" id="skills-grid">
                     <!-- Skills will be dynamically inserted here -->
                 </div>
-                <div class="mt-12">
+                <div class="mt-12 w-full">
                      <h3 class="text-2xl font-bold text-center text-dark-text mb-4">Skill Proficiency</h3>
                      <div class="bg-lightest p-6 rounded-xl shadow-lg">
                         <div class="chart-container">
@@ -263,18 +347,18 @@
             </section>
 
             <!-- Experience Section -->
-            <section id="experience" class="mb-16 scroll-mt-24">
-                <h2 class="text-3xl font-bold text-center text-dark-text mb-2">Professional Experience</h2>
-                <p class="text-center text-dark-accent mb-12">An interactive timeline of my career journey. Click on any role to see the details.</p>
-                <div class="relative" id="experience-timeline">
+            <section id="experience" class="mb-16 scroll-mt-24 flex flex-col items-center">
+                <h2 class="section-header">Professional Experience</h2>
+                <p class="text-center text-dark-text mb-12">An interactive timeline of my career journey. Click on any role to see the details.</p>
+                <div class="relative w-full" id="experience-timeline">
                     <!-- Timeline items will be injected here -->
                 </div>
             </section>
 
             <!-- Education & Certifications Section -->
-            <section id="education" class="mb-16 scroll-mt-24">
-                 <h2 class="text-3xl font-bold text-center text-dark-text mb-8">Education & Certifications</h2>
-                 <div class="grid md:grid-cols-2 gap-8">
+            <section id="education" class="mb-16 scroll-mt-24 flex flex-col items-center">
+                 <h2 class="section-header">Education & Certifications</h2>
+                 <div class="grid md:grid-cols-2 gap-8 w-full">
                     <div class="bg-lightest p-8 rounded-xl shadow-lg">
                         <h3 class="text-2xl font-bold text-dark-text mb-4">Education</h3>
                         <div class="space-y-4">
@@ -303,15 +387,15 @@
             </section>
 
             <!-- Documents Section -->
-            <section id="documents" class="mb-16 scroll-mt-24">
-                <h2 class="text-3xl font-bold text-center text-dark-text mb-8">Documents & Certificates</h2>
-                <div class="bg-lightest p-8 rounded-xl shadow-lg">
+            <section id="documents" class="mb-16 scroll-mt-24 flex flex-col items-center">
+                <h2 class="section-header">Documents & Certificates</h2>
+                <div class="bg-lightest p-8 rounded-xl shadow-lg w-full">
                     <button class="w-full text-left font-bold text-xl text-dark-text py-4 px-4 rounded-lg bg-light-accent hover:bg-dark-accent hover:text-lightest transition duration-300 flex justify-between items-center" onclick="toggleDocuments()">
                         View My Certificates
                         <span id="document-toggle-icon">▲</span>
                     </button>
                     <div id="documents-content" class="mt-6">
-                        <p class="text-dark-accent text-center mb-6">Explore a selection of my certifications and achievements.</p>
+                        <p class="text-dark-text text-center mb-6">Explore a selection of my certifications and achievements.</p>
                         <div class="carousel-container">
                             <div class="carousel-slides" id="certificate-carousel">
                                 <!-- Certificate images will be injected here -->
@@ -319,16 +403,16 @@
                             <button class="carousel-button left" onclick="prevSlide()">&#10094;</button>
                             <button class="carousel-button right" onclick="nextSlide()">&#10095;</button>
                         </div>
-                        <div class="text-center text-sm text-dark-accent mt-4" id="carousel-caption"></div>
+                        <div class="text-center text-sm text-dark-text mt-4" id="carousel-caption"></div>
                     </div>
                 </div>
             </section>
 
             <!-- Contact Me Section -->
-            <section id="contact" class="mb-16 scroll-mt-24">
-                <div class="bg-lightest p-8 rounded-xl shadow-lg">
-                    <h2 class="text-3xl font-bold text-center text-dark-text mb-4">Contact Me</h2>
-                    <p class="text-center text-dark-accent mb-8 max-w-2xl mx-auto">
+            <section id="contact" class="mb-16 scroll-mt-24 flex flex-col items-center">
+                <h2 class="section-header">Contact Me</h2>
+                <div class="bg-lightest p-8 rounded-xl shadow-lg w-full">
+                    <p class="text-center text-dark-text mb-8 max-w-2xl mx-auto">
                         Do you want me to create your websites/web applications? Fill out the form and fill me in with the details :) I love meeting new people!
                     </p>
                     <form id="contactForm" class="max-w-md mx-auto space-y-4">
@@ -621,13 +705,14 @@
                 let currentSectionId = '';
                 const scrollThreshold = 100; // Offset for when a section becomes active
 
-                // Iterate sections in reverse order to find the topmost visible section
+                // Find the topmost visible section
                 for (let i = sections.length - 1; i >= 0; i--) {
                     const section = sections[i];
-                    if (window.scrollY + section.offsetHeight > section.offsetTop + scrollThreshold &&
-                        window.scrollY < section.offsetTop + section.offsetHeight - scrollThreshold) {
+                    const rect = section.getBoundingClientRect();
+                    // Check if the section is at least partially in view, considering the scrollThreshold
+                    if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
                         currentSectionId = section.getAttribute('id');
-                        break; // Found the active section, exit loop
+                        break;
                     }
                 }
 
@@ -637,7 +722,7 @@
                 });
 
                 // Add 'active' class only to the link corresponding to the current section
-                if (currentSectionId) { // Ensure currentSectionId is not empty
+                if (currentSectionId) {
                     const activeLink = document.querySelector(`.nav-link[href="#${currentSectionId}"]`);
                     if (activeLink) {
                         activeLink.classList.add('active', 'bg-dark-accent');
@@ -806,6 +891,18 @@
                 contactModal.style.display = 'none';
             }
         }
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileNav = document.getElementById('mobile-menu-nav');
+            const overlay = document.getElementById('mobile-menu-overlay');
+            const body = document.body;
+
+            mobileNav.classList.toggle('open');
+            overlay.classList.toggle('open');
+            body.classList.toggle('no-scroll'); // Prevent scrolling when menu is open
+        }
+
 
         document.addEventListener('DOMContentLoaded', () => {
             renderSkills();
