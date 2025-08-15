@@ -180,8 +180,8 @@
         /* Gradient background for main content */
         .main-gradient-bg {
             background: linear-gradient(to bottom, var(--color-lightest) 0%, var(--color-light-accent) 30%, var(--color-dark-accent) 70%, var(--color-dark-text) 100%);
-            background-size: 100% 4000px; /* Increased height for more pronounced parallax */
-            background-attachment: fixed; /* Fix the background relative to the viewport */
+            background-size: 100% 100%; /* Reverted to cover 100% height */
+            background-attachment: scroll; /* Reverted to scroll normally */
         }
 
         /* Section Header Styling */
@@ -199,6 +199,13 @@
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             margin-left: auto; /* Center the table element */
             margin-right: auto; /* Center the table element */
+        }
+        /* Mobile section header size */
+        @media (max-width: 767px) {
+            .section-header {
+                font-size: 1.5rem; /* text-2xl for mobile */
+                padding: 0.5rem 1rem;
+            }
         }
 
         /* Mobile menu specific styles */
@@ -345,7 +352,7 @@
             <section id="about" class="mb-16 scroll-mt-24 flex flex-col items-center">
                 <h2 class="section-header">About Me</h2>
                 <div class="bg-lightest p-8 rounded-xl shadow-lg transition hover:shadow-2xl w-full">
-                    <img src="assets/images/Toushif_profile_small.jpg" alt="Toushif UL Haque Profile" class="w-32 h-32 rounded-full object-cover border border-darkest-bg md:float-right md:ml-6 mb-4 md:mb-0 flex-shrink-0">
+                    <img src="assets/images/Toushif_profile_small.jpg" alt="Toushif UL Haque Profile" class="w-96 h-96 rounded-full object-cover border border-darkest-bg md:float-right md:ml-6 mb-4 md:mb-0 flex-shrink-0">
                     <p class="text-lg text-dark-text leading-relaxed">
                         Hi there 👋 I am a Frontend turned Full-stack Developer/Software Engineer with 9 years of Enterprise-level experience, graduate of Information Technology, postgraduate in Cloud computing and pursuing masters in Artificial Intelligence, and in Love with JavaScript. I have worked full time with organisations like IBM, Cognizant, L&TMindtree over the past 9+ years, and worked with different clients like Arista Networks, Daimler, Mercedez Benz, Maersk Line, British American Tobacco, Standard Insurance Company, LPL Financial, etc. to help create their Web products. I create Robust, Scalable and Successful Websites/Web Applications that are fast, easy to use, and built with best coding practices.
                         <br><br>
@@ -705,13 +712,22 @@
         
         function renderSkillChart() {
             const ctx = document.getElementById('skillProficiencyChart').getContext('2d');
-            const chart = new Chart(ctx, {
+
+            // Destroy existing chart if it exists to prevent re-render issues
+            if (window.myRadarChart) {
+                window.myRadarChart.destroy();
+            }
+
+            // Updated chartData as per your request
+            const chartData = [9, 8.3, 9, 8.8, 8, 7.9]; // React, Angular, JavaScript/TS, System Design, Backend Dev, Testing & QA
+
+            window.myRadarChart = new Chart(ctx, {
                 type: 'radar',
                 data: {
                     labels: ['React', 'Angular', 'JavaScript/TS', 'System Design', 'Backend Dev', 'Testing & QA'],
                     datasets: [{
                         label: 'Proficiency',
-                        data: [9, 8, 9, 8, 7, 8],
+                        data: chartData, // Use the updated chartData
                         backgroundColor: 'rgba(82, 121, 111, 0.2)', /* hookers-green with alpha */
                         borderColor: 'rgba(82, 121, 111, 1)', /* hookers-green */
                         borderWidth: 2,
@@ -754,6 +770,7 @@
                     }
                 }
             });
+            return window.myRadarChart; // Return the chart instance
         }
         
         // Debounce variable for scrollspy
@@ -926,7 +943,13 @@
                 bodyContent += `Message: %0D%0A${message}`;
                 mailtoLink += encodeURIComponent(bodyContent);
 
-                window.location.href = mailtoLink;
+                try {
+                    window.location.href = mailtoLink;
+                } catch (error) {
+                    console.error("Failed to open mailto link:", error);
+                    // Optionally, display a user-friendly message here
+                    // alert("Your mail application could not be opened automatically. Please copy the details and send manually.");
+                }
                 
                 // Close modal if form submitted from modal
                 if (formId === 'contactModalForm') {
