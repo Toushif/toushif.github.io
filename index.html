@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Toushif UL Haque - Frontend Developer Portfolio</title>
+    <title>Toushif UL Haque - Portfolio</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -41,7 +41,7 @@
         }
         .bg-darkest-bg { background-color: var(--color-darkest-bg); }
         .text-darkest-bg { color: var(--color-darkest-bg); }
-        .bg-dark-text { color: var(--color-dark-text); }
+        .text-dark-text { color: var(--color-dark-text); }
         .text-dark-text { color: var(--color-dark-text); }
         .bg-dark-accent { background-color: var(--color-dark-accent); }
         .text-dark-accent { color: var(--color-dark-accent); }
@@ -299,7 +299,8 @@
 
     <!-- Left Fixed Side Menu (Desktop) -->
     <nav class="hidden md:flex flex-col w-64 bg-darkest-bg text-lightest p-6 fixed h-full shadow-lg z-40">
-        <h1 class="text-3xl font-bold mb-8 text-lightest">Toushif UL Haque</h1>
+        <h1 class="text-3xl font-bold mb-4 text-lightest">Toushif UL Haque</h1>
+        <p class="text-lg font-medium text-light-accent mb-8">Frontend Developer / Software Engineer</p>
         <div class="space-y-4 flex-grow">
             <a href="#about" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'about')">About Me</a>
             <a href="#summary" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'summary')">Summary</a>
@@ -316,10 +317,11 @@
 
     <!-- Mobile Slide-out Menu -->
     <nav id="mobile-menu-nav" class="md:hidden">
-        <div class="flex justify-between items-center mb-8">
-            <h1 class="text-2xl font-bold text-lightest">Menu</h1>
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-2xl font-bold text-lightest">Toushif UL Haque</h1>
             <button class="text-lightest text-3xl leading-none" onclick="toggleMobileMenu()">&times;</button>
         </div>
+        <p class="text-lg font-medium text-light-accent mb-8">Frontend Developer / Software Engineer</p>
         <div class="space-y-4 flex-grow">
             <a href="#about" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'about'); toggleMobileMenu();">About Me</a>
             <a href="#summary" class="nav-link block py-2 px-4 rounded-lg text-lg hover:bg-dark-accent transition duration-300" onclick="scrollToSection(event, 'summary'); toggleMobileMenu();">Summary</a>
@@ -337,10 +339,12 @@
         <header class="bg-lightest/80 backdrop-blur-lg sticky top-0 z-50 shadow-sm">
             <nav class="container mx-auto px-6 py-4 flex items-center justify-between md:justify-end">
                 <!-- Hamburger icon for mobile -->
-                <button class="md:hidden text-dark-text text-3xl leading-none" onclick="toggleMobileMenu()">&#x2630;</button>
-                <div class="flex space-x-4">
-                    <a href="https://docs.google.com/document/d/18WgMw3YR8yD6GlPq8eBicC_LqFm1YsXxcKSrAXb9u7k/export?format=pdf" target="_blank" rel="noopener noreferrer" class="bg-dark-accent text-lightest px-4 py-2 rounded-lg header-btn-hover transition">Download Resume</a>
-                    <button class="bg-dark-accent text-lightest px-4 py-2 rounded-lg header-btn-hover transition" onclick="openContactModal()">Contact Me</button>
+                <button class="md:hidden text-dark-text text-3xl leading-none mr-4" onclick="toggleMobileMenu()">&#x2630;</button>
+                <div class="flex space-x-2 md:space-x-4">
+                    <!-- Web view: px-4 py-2 text-base -->
+                    <!-- Mobile view: px-2 py-1 text-sm -->
+                    <a href="https://docs.google.com/document/d/18WgMw3YR8yD6GlPq8eBicC_LqFm1YsXxcKSrAXb9u7k/export?format=pdf" target="_blank" rel="noopener noreferrer" class="bg-dark-accent text-lightest rounded-lg header-btn-hover transition px-4 py-2 text-base">Download Resume</a>
+                    <button class="bg-dark-accent text-lightest rounded-lg header-btn-hover transition px-4 py-2 text-base" onclick="openContactModal()">Contact Me</button>
                     <button id="openPaletteBtn" class="text-dark-text px-1 py-1 rounded-lg hover:bg-light-accent transition text-3xl">🎨</button>
                 </div>
             </nav>
@@ -514,6 +518,17 @@
         </div>
     </div>
 
+    <!-- Full Screen Certificate Modal -->
+    <div id="fullScreenModal" class="modal">
+        <div class="modal-content flex flex-col items-center p-4">
+            <span class="close-button" onclick="closeFullScreenModal()">&times;</span>
+            <div id="fullScreenContent" class="w-full h-full flex items-center justify-center">
+                <!-- Image or PDF will be loaded here -->
+            </div>
+            <div id="fullScreenCaption" class="text-center text-dark-text mt-4"></div>
+        </div>
+    </div>
+
     <!-- Contact Modal -->
     <div id="contactModal" class="modal">
         <div class="modal-content">
@@ -644,11 +659,20 @@
         ];
 
         const certificatesData = [
-            { src: "https://placehold.co/600x400/52796F/cad2c5?text=Cert+1:+Web+Development", caption: "Certificate in Advanced Web Development" },
-            { src: "https://placehold.co/600x400/84A98C/2F3E46?text=Cert+2:+Cloud+Computing", caption: "Cloud Computing Specialization" },
-            { src: "https://placehold.co/600x400/354F52/cad2c5?text=Cert+3:+React+Mastery", caption: "React Framework Mastery" },
-            { src: "https://placehold.co/600x400/2F3E46/cad2c5?text=Cert+4:+Agile+Methodologies", caption: "Agile Project Management" },
-            { src: "https://placehold.co/600x400/52796F/cad2c5?text=Cert+5:+Data+Structures", caption: "Data Structures & Algorithms" }
+            { src: "assets/images/AWS Solution Architect Certificate.pdf", caption: "PG CC - AWS Solutions Architect", url: null },
+            { src: "assets/images/Azure Certificate.pdf", caption: "PG CC - Microsoft Certified Azure Administrator: AZ:104", url: null },
+            { src: "assets/images/Angular Certificate.jpg", caption: "Angular certificate", url: "https://www.hackerrank.com/certificates/74a1dc0ead50" },
+            { src: "assets/images/React Certificate.jpg", caption: "React certificate", url: "https://www.hackerrank.com/certificates/ddd0ebaea285" },
+            { src: "assets/images/JavaScript Algorithms and Data Structures Masterclass.jpg", caption: "JavaScript Algorithms and Data Structures Masterclass", url: "https://www.udemy.com/certificate/UC-59aafff3-dfbb-49c5-b21c-2b45d622de8c/" },
+            { src: "assets/images/JavaScript- Understanding the Weird Parts.jpg", caption: "JavaScript: Understanding the Weird Parts", url: "https://www.udemy.com/certificate/UC-02bcf3ce-2885-4475-93d8-11e2453fb1db/" },
+            { src: "assets/images/ES6 Javascript- The Complete Developer's Guide.jpg", caption: "ES6 Javascript: The Complete Developer's Guide", url: "https://www.udemy.com/certificate/UC-41a1873b-c74c-4f43-833a-15c209455c77/" },
+            { src: "assets/images/Understanding TypeScript.jpg", caption: "Understanding TypeScript", url: "https://www.udemy.com/certificate/UC-e2b4da7f-7c9b-48f7-b3de-028cdca320de/" },
+            { src: "assets/images/The Complete Node.js Developer Course.jpg", caption: "The Complete Node.js Developer Course", url: "https://www.udemy.com/certificate/UC-805e091a-db79-49be-b1b8-aaac9fec27e5/" },
+            { src: "assets/images/MongoDB - The Complete Developer's Guide.jpg", caption: "MongoDB - The Complete Developer's Guide", url: "https://www.udemy.com/certificate/UC-43fe8d8b-7405-4238-9f62-6fce9a31a348/" },
+            { src: "assets/images/Just Express (with a bunch of node and http).jpg", caption: "Just Express (with a bunch of node and http)", url: "https://www.udemy.com/certificate/UC-5e2a806e-266e-4afc-a508-fae951a429b6/" },
+            { src: "assets/images/Jenkins 2 Bootcamp- Fully Automate Builds to Deployment.jpg", caption: "Jenkins 2 Bootcamp: Fully Automate Builds to Deployment", url: "https://www.udemy.com/certificate/UC-32a7b577-a243-461e-b563-b327e5a9e11f/" },
+            { src: "assets/images/Unit testing your Javascript with jasmine.jpg", caption: "Unit testing your Javascript with Jasmine", url: "https://www.udemy.com/certificate/UC-d6972dd4-c90d-4780-8456-e7407294822a/" },
+            { src: "assets/images/Build NodeJS applications with Mongodb.jpg", caption: "Build NodeJS applications with Mongodb", url: "https://www.udemy.com/certificate/UC-5eab33b2-748b-468f-95c4-52f25729b7da/" }
         ];
 
         let currentSlide = 0;
@@ -849,14 +873,32 @@
         function renderCertificates() {
             const carousel = document.getElementById('certificate-carousel');
             carousel.innerHTML = '';
-            certificatesData.forEach(cert => {
+            certificatesData.forEach((cert, index) => {
                 const slide = document.createElement('div');
                 slide.className = 'carousel-slide';
-                const img = document.createElement('img');
-                img.src = cert.src;
-                img.alt = cert.caption;
-                img.onerror = function() { this.src = 'https://placehold.co/600x400/84A98C/2F3E46?text=Image+Error'; }; // Fallback with new palette
-                slide.appendChild(img);
+                
+                let mediaElement;
+                const isPdf = cert.src.endsWith('.pdf');
+
+                if (isPdf) {
+                    // For PDFs, use an iframe
+                    mediaElement = document.createElement('iframe');
+                    mediaElement.src = cert.src + '#toolbar=0&navpanes=0'; // Hide toolbar/nav for cleaner view
+                    mediaElement.className = 'w-full h-full object-contain rounded-lg'; // Tailwind classes for styling
+                    mediaElement.style.minHeight = '300px'; // Ensure visibility
+                } else {
+                    // For images, use an img tag
+                    mediaElement = document.createElement('img');
+                    mediaElement.src = cert.src;
+                    mediaElement.alt = cert.caption;
+                    mediaElement.className = 'max-w-full h-auto rounded-lg'; // Tailwind classes for styling
+                    mediaElement.onerror = function() { this.src = 'https://placehold.co/600x400/84A98C/2F3E46?text=Image+Error'; }; // Fallback
+                }
+                
+                // Add click listener to open full screen modal
+                mediaElement.onclick = () => openFullScreenModal(cert);
+
+                slide.appendChild(mediaElement);
                 carousel.appendChild(slide);
             });
             showSlide(currentSlide);
@@ -891,6 +933,72 @@
                 nextSlide();
             }, 2000); // Change image every 2 seconds
         }
+
+        // --- Full Screen Modal Logic ---
+        let fullScreenModal;
+        let fullScreenContent;
+        let fullScreenCaption;
+
+        function openFullScreenModal(cert) {
+            fullScreenModal = document.getElementById('fullScreenModal');
+            fullScreenContent = document.getElementById('fullScreenContent');
+            fullScreenCaption = document.getElementById('fullScreenCaption');
+
+            if (!fullScreenModal || !fullScreenContent || !fullScreenCaption) {
+                console.error("Full screen modal elements not found!");
+                return;
+            }
+
+            fullScreenContent.innerHTML = ''; // Clear previous content
+            fullScreenCaption.innerHTML = ''; // Clear previous caption
+
+            const isPdf = cert.src.endsWith('.pdf');
+
+            if (isPdf) {
+                const iframe = document.createElement('iframe');
+                iframe.src = cert.src + '#toolbar=0&navpanes=0'; // Hide toolbar/nav for cleaner view
+                iframe.className = 'w-full h-full';
+                iframe.style.minHeight = '80vh'; // Ensure it takes up significant height
+                fullScreenContent.appendChild(iframe);
+            } else {
+                const img = document.createElement('img');
+                img.src = cert.src;
+                img.alt = cert.caption;
+                img.className = 'max-w-full max-h-[80vh] object-contain'; // Constrain image size
+                img.onerror = function() { this.src = 'https://placehold.co/600x400/84A98C/2F3E46?text=Image+Error'; }; // Fallback
+                fullScreenContent.appendChild(img);
+            }
+
+            // Add caption and link if URL exists
+            const captionText = document.createElement('span');
+            captionText.textContent = cert.caption;
+            captionText.className = 'text-lg font-semibold';
+
+            if (cert.url) {
+                const captionLink = document.createElement('a');
+                captionLink.href = cert.url;
+                captionLink.target = "_blank";
+                captionLink.rel = "noopener noreferrer";
+                captionLink.className = 'text-dark-accent hover:underline flex items-center justify-center';
+                captionLink.innerHTML = `${cert.caption} <span class="ml-2">&#x2197;</span>`; // Unicode for redirect icon
+                fullScreenCaption.appendChild(captionLink);
+            } else {
+                fullScreenCaption.appendChild(captionText);
+            }
+
+            fullScreenModal.style.display = 'flex';
+            document.body.classList.add('no-scroll'); // Disable background scrolling
+        }
+
+        function closeFullScreenModal() {
+            fullScreenModal = document.getElementById('fullScreenModal');
+            if (fullScreenModal) {
+                fullScreenModal.style.display = 'none';
+            }
+            document.body.classList.remove('no-scroll'); // Enable background scrolling
+        }
+        // --- End Full Screen Modal Logic ---
+
 
         // Contact Form Validation and Mailto Logic
         function validateForm(formId) {
@@ -986,6 +1094,9 @@
             }
             if (event.target == paletteModal) { // Close palette modal if clicking outside
                 closePaletteModal();
+            }
+            if (event.target == fullScreenModal) { // Close full screen modal if clicking outside
+                closeFullScreenModal();
             }
         }
 
