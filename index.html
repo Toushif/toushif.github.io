@@ -107,6 +107,9 @@
         .carousel-container {
             position: relative;
             width: 100%;
+            max-width: 600px; /* Reduced max-width for smaller carousel */
+            margin-left: auto;
+            margin-right: auto;
             overflow: hidden;
             border-radius: 0.75rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
@@ -289,6 +292,27 @@
         .palette-item:hover .palette-tooltip {
             opacity: 1;
             visibility: visible;
+        }
+        /* Full screen modal content adjustments for larger image/PDF */
+        #fullScreenModal .modal-content {
+            max-width: 95%; /* Increased width */
+            width: 900px; /* Increased fixed width for larger screens */
+            max-height: 95vh; /* Increased max height */
+            height: auto;
+            padding: 1rem; /* Reduced padding to give more space to content */
+        }
+        #fullScreenContent {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Ensure content doesn't overflow */
+        }
+        #fullScreenContent img, #fullScreenContent iframe {
+            max-width: 100%;
+            max-height: 85vh; /* Allow media to take more height within the modal */
+            object-fit: contain; /* Ensure image fits without cropping */
         }
     </style>
 </head>
@@ -661,8 +685,8 @@
         const certificatesData = [
             { src: "assets/images/AWS Solution Architect Certificate.pdf", caption: "PG CC - AWS Solutions Architect", url: null },
             { src: "assets/images/Azure Certificate.pdf", caption: "PG CC - Microsoft Certified Azure Administrator: AZ:104", url: null },
-            { src: "assets/images/Angular Certificate.jpg", caption: "Angular certificate", url: "https://www.hackerrank.com/certificates/74a1dc0ead50" },
-            { src: "assets/images/React Certificate.jpg", caption: "React certificate", url: "https://www.hackerrank.com/certificates/ddd0ebaea285" },
+            { src: "assets/images/Angular Certificate.png", caption: "Angular certificate", url: "https://www.hackerrank.com/certificates/74a1dc0ead50" },
+            { src: "assets/images/React Certificate.png", caption: "React certificate", url: "https://www.hackerrank.com/certificates/ddd0ebaea285" },
             { src: "assets/images/JavaScript Algorithms and Data Structures Masterclass.jpg", caption: "JavaScript Algorithms and Data Structures Masterclass", url: "https://www.udemy.com/certificate/UC-59aafff3-dfbb-49c5-b21c-2b45d622de8c/" },
             { src: "assets/images/JavaScript- Understanding the Weird Parts.jpg", caption: "JavaScript: Understanding the Weird Parts", url: "https://www.udemy.com/certificate/UC-02bcf3ce-2885-4475-93d8-11e2453fb1db/" },
             { src: "assets/images/ES6 Javascript- The Complete Developer's Guide.jpg", caption: "ES6 Javascript: The Complete Developer's Guide", url: "https://www.udemy.com/certificate/UC-41a1873b-c74c-4f43-833a-15c209455c77/" },
@@ -964,7 +988,7 @@
                 const img = document.createElement('img');
                 img.src = cert.src;
                 img.alt = cert.caption;
-                img.className = 'max-w-full max-h-[80vh] object-contain'; // Constrain image size
+                img.className = 'max-w-full max-h-[85vh] object-contain'; // Constrain image size, increased from 80vh
                 img.onerror = function() { this.src = 'https://placehold.co/600x400/84A98C/2F3E46?text=Image+Error'; }; // Fallback
                 fullScreenContent.appendChild(img);
             }
