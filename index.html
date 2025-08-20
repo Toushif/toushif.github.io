@@ -348,8 +348,8 @@
         .fullscreen-nav-button:hover {
             background-color: rgba(0, 0, 0, 0.7);
         }
-        .fullscreen-nav-button.left { left: 1rem; }
-        .fullscreen-nav-button.right { right: 1rem; }
+        .fullscreen-nav-button.left { left: 10%; } /* Updated to 10% */
+        .fullscreen-nav-button.right { right: 10%; } /* Updated to 10% */
 
         /* Hide nav buttons on mobile */
         @media (max-width: 767px) {
@@ -539,7 +539,7 @@
             <!-- Contact Me Section -->
             <section id="contact" class="mb-16 scroll-mt-24 flex flex-col items-center">
                 <h2 class="section-header">Contact Me</h2>
-                <div class="bg-lightest p-8 rounded-xl shadow-lg w-full">
+                <div class="bg-lightest p-8 rounded-xl shadow-lg transition hover:shadow-2xl w-full">
                     <p class="text-center text-dark-text mb-8 max-w-2xl mx-auto">
                         Do you want me to create your websites/web applications? Fill out the form and fill me in with the details :) I love meeting new people!
                     </p>
