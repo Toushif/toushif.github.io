@@ -127,6 +127,7 @@
             align-items: center;
             justify-content: center;
             padding: 1.5rem;
+            cursor: pointer; /* Added cursor pointer for carousel items */
         }
         .carousel-slide img {
             max-width: 100%;
@@ -223,7 +224,7 @@
             color: var(--color-lightest);
             padding: 1.5rem;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            z-index: 100; /* Increased z-index */
+            z-index: 1000; /* Increased z-index to ensure it's always on top */
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
             display: flex;
@@ -239,7 +240,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
-            z-index: 99; /* Increased z-index */
+            z-index: 999; /* Increased z-index to be below mobile nav but above content */
             display: none;
         }
         #mobile-menu-overlay.open {
@@ -294,12 +295,17 @@
             visibility: visible;
         }
         /* Full screen modal content adjustments for larger image/PDF */
+        #fullScreenModal {
+            z-index: 1000; /* Ensure this modal is always on top */
+        }
         #fullScreenModal .modal-content {
             max-width: 95%; /* Increased width */
             width: 900px; /* Increased fixed width for larger screens */
             max-height: 95vh; /* Increased max height */
             height: auto;
             padding: 1rem; /* Reduced padding to give more space to content */
+            background-color: transparent; /* Make content background transparent to see overlay */
+            box-shadow: none; /* Remove shadow from content box */
         }
         #fullScreenContent {
             display: flex;
@@ -309,6 +315,9 @@
             height: 100%;
             overflow: hidden; /* Ensure content doesn't overflow */
             position: relative; /* For nav buttons */
+            background-color: var(--color-lightest); /* Add background to content area */
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
         }
         #fullScreenContent img {
             max-width: 100%;
@@ -324,7 +333,7 @@
         }
 
         .fullscreen-nav-button {
-            position: absolute;
+            position: fixed; /* Changed to fixed to be relative to viewport */
             top: 50%;
             transform: translateY(-50%);
             background-color: rgba(0, 0, 0, 0.5);
@@ -332,7 +341,7 @@
             padding: 0.75rem 1rem;
             border-radius: 9999px;
             cursor: pointer;
-            z-index: 20; /* Above image/pdf */
+            z-index: 1001; /* Above modal overlay and content */
             font-size: 1.5rem; /* Larger arrows */
             transition: background-color 0.3s ease;
         }
@@ -399,8 +408,6 @@
                 <!-- Hamburger icon for mobile -->
                 <button class="md:hidden text-dark-text text-3xl leading-none mr-4" onclick="toggleMobileMenu()">&#x2630;</button>
                 <div class="flex space-x-2 md:space-x-4">
-                    <!-- Web view: px-4 py-2 text-base -->
-                    <!-- Mobile view: px-2 py-1 text-sm -->
                     <a href="https://docs.google.com/document/d/18WgMw3YR8yD6GlPq8eBicC_LqFm1YsXxcKSrAXb9u7k/export?format=pdf" target="_blank" rel="noopener noreferrer" class="bg-dark-accent text-lightest rounded-lg header-btn-hover transition px-4 py-2 text-base">Download Resume</a>
                     <button class="bg-dark-accent text-lightest rounded-lg header-btn-hover transition px-4 py-2 text-base" onclick="openContactModal()">Contact Me</button>
                     <button id="openPaletteBtn" class="text-dark-text px-1 py-1 rounded-lg hover:bg-light-accent transition text-3xl">🎨</button>
@@ -461,11 +468,10 @@
                 <div class="mt-12 w-full">
                      <h3 class="text-2xl font-bold text-center text-dark-text mb-4">Skill Proficiency</h3>
                      <div class="bg-lightest p-6 rounded-xl shadow-lg">
-                        <div class="chart-container">
-                            <canvas id="skillProficiencyChart"></canvas>
+                        <canvas id="skillProficiencyChart"></canvas>
                         </div>
                     </div>
-                </div>
+                </canvas>
             </section>
 
             <!-- Experience Section -->
@@ -550,7 +556,7 @@
                         </div>
                         <div>
                             <label for="phone" class="block text-dark-text text-sm font-semibold mb-2">Phone (Optional):</label>
-                            <input type="tel" id="phone" name="phone" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent">
+                            <input type="tel" id="modalPhone" name="phone" class="w-full p-3 rounded-lg border border-light-accent focus:outline-none focus:ring-2 focus:ring-dark-accent">
                         </div>
                         <div>
                             <label for="message" class="block text-dark-text text-sm font-semibold mb-2">Message:</label>
@@ -624,6 +630,19 @@
     </div>
 
     <script>
+        // Global variables for modals
+        var contactModal;
+        var paletteModal;
+        var paletteList;
+        var fullScreenModal;
+        var fullScreenContent;
+        var fullScreenCaption;
+        var currentFullScreenIndex = 0; // To track current certificate in full screen
+        var carouselInterval;
+        var myRadarChart; // Global Chart.js instance
+        var currentSlide = 0; // Global variable for carousel current slide
+
+        // Skill data for the skills section
         const skillsData = [
             { name: 'JavaScript (ES6+)', category: 'frontend', icon: '&#x1F4BB;' }, /* Laptop */
             { name: 'TypeScript', category: 'frontend', icon: '&#x1F4D3;' }, /* Notebook */
@@ -649,6 +668,7 @@
             { name: 'JMeter', category: 'tools', icon: '&#x26A1;' }, /* High Voltage */
         ];
 
+        // Experience data for the experience section
         const experienceData = [
             {
                 date: 'Dec 2021 – Present',
@@ -736,9 +756,7 @@
             { src: "assets/images/Build NodeJS applications with Mongodb.jpg", caption: "Build NodeJS applications with Mongodb", url: "https://www.udemy.com/certificate/UC-5eab33b2-748b-468f-95c4-52f25729b7da/" }
         ];
 
-        let currentSlide = 0;
-        let carouselInterval;
-
+        // Function to render skills grid
         function renderSkills(category = 'all') {
             const skillsGrid = document.getElementById('skills-grid');
             skillsGrid.innerHTML = '';
@@ -752,6 +770,7 @@
             });
         }
 
+        // Function to filter skills
         function filterSkills(category) {
             document.querySelectorAll('.skill-btn').forEach(btn => btn.classList.remove('active', 'bg-dark-accent', 'text-lightest'));
             const activeButton = document.querySelector(`.skill-btn[onclick="filterSkills('${category}')"]`);
@@ -761,6 +780,7 @@
             renderSkills(category);
         }
 
+        // Function to render experience timeline
         function renderExperience() {
             const timeline = document.getElementById('experience-timeline');
             timeline.innerHTML = '';
@@ -784,6 +804,7 @@
             });
         }
 
+        // Function to toggle experience details
         function toggleDetails(element) {
             const details = element.querySelector('.details');
             const isOpen = !details.classList.contains('hidden');
@@ -795,18 +816,18 @@
             details.classList.toggle('hidden');
         }
         
+        // Function to render skill radar chart
         function renderSkillChart() {
             const ctx = document.getElementById('skillProficiencyChart').getContext('2d');
 
             // Destroy existing chart if it exists to prevent re-render issues
-            if (window.myRadarChart) {
-                window.myRadarChart.destroy();
+            if (myRadarChart) { // Use the global variable directly
+                myRadarChart.destroy();
             }
 
-            // Updated chartData as per your request
             const chartData = [9, 8.3, 9, 8.8, 8, 7.9]; // React, Angular, JavaScript/TS, System Design, Backend Dev, Testing & QA
 
-            window.myRadarChart = new Chart(ctx, {
+            myRadarChart = new Chart(ctx, { // Assign to the global variable
                 type: 'radar',
                 data: {
                     labels: ['React', 'Angular', 'JavaScript/TS', 'System Design', 'Backend Dev', 'Testing & QA'],
@@ -855,12 +876,13 @@
                     }
                 }
             });
-            return window.myRadarChart; // Return the chart instance
+            return myRadarChart; // Return the chart instance
         }
         
         // Debounce variable for scrollspy
         let scrollTimeout;
 
+        // Function to handle scrollspy
         function handleScrollspy() {
             // Clear any existing timeout to debounce the function call
             clearTimeout(scrollTimeout);
@@ -914,6 +936,7 @@
         }
 
 
+        // Function to toggle documents section visibility
         function toggleDocuments() {
             const content = document.getElementById('documents-content');
             const icon = document.getElementById('document-toggle-icon');
@@ -931,6 +954,7 @@
             }
         }
 
+        // Function to render certificates in carousel
         function renderCertificates() {
             const carousel = document.getElementById('certificate-carousel');
             carousel.innerHTML = '';
@@ -963,8 +987,16 @@
                 carousel.appendChild(slide);
             });
             showSlide(currentSlide);
+
+            // Add event listeners to pause/resume carousel on hover
+            const carouselContainer = document.querySelector('.carousel-container');
+            if (carouselContainer) {
+                carouselContainer.addEventListener('mouseenter', () => clearInterval(carouselInterval));
+                carouselContainer.addEventListener('mouseleave', startCarousel);
+            }
         }
 
+        // Function to show specific slide in carousel
         function showSlide(index) {
             const slides = document.querySelectorAll('.carousel-slide');
             const totalSlides = slides.length;
@@ -980,27 +1012,26 @@
             document.getElementById('carousel-caption').textContent = certificatesData[currentSlide].caption;
         }
 
+        // Function to navigate to next slide
         function nextSlide() {
             showSlide(currentSlide + 1);
         }
 
+        // Function to navigate to previous slide
         function prevSlide() {
-            showSlide(currentSlide + 1);
+            showSlide(currentSlide - 1); // Corrected to move to previous
         }
 
+        // Function to start automatic carousel sliding
         function startCarousel() {
             clearInterval(carouselInterval); // Clear any existing interval
             carouselInterval = setInterval(() => {
                 nextSlide();
-            }, 2000); // Change image every 2 seconds
+            }, 3000); // Change image every 3 seconds
         }
 
         // --- Full Screen Modal Logic ---
-        let fullScreenModal;
-        let fullScreenContent;
-        let fullScreenCaption;
-        let currentFullScreenIndex = 0; // To track current certificate in full screen
-
+        // Function to open full screen modal
         function openFullScreenModal(cert) {
             fullScreenModal = document.getElementById('fullScreenModal');
             fullScreenContent = document.getElementById('fullScreenContent');
@@ -1024,6 +1055,7 @@
             fullScreenContent.addEventListener('touchend', handleTouchEnd, false);
         }
 
+        // Helper function to load content into full screen modal
         function _loadFullScreenContent(cert) {
             fullScreenContent.innerHTML = ''; // Clear previous content
             fullScreenCaption.innerHTML = ''; // Clear previous caption
@@ -1051,17 +1083,18 @@
                 captionLink.href = cert.url;
                 captionLink.target = "_blank";
                 captionLink.rel = "noopener noreferrer";
-                captionLink.className = 'text-dark-accent hover:underline flex items-center justify-center text-xl'; // Increased font-size to text-xl
+                captionLink.className = 'text-dark-text hover:underline flex items-center justify-center text-xl'; // Increased font-size to text-xl
                 captionLink.innerHTML = `${cert.caption} <span class="ml-2">&#x2197;</span>`; // Unicode for redirect icon
                 fullScreenCaption.appendChild(captionLink);
             } else {
                 const captionText = document.createElement('span');
                 captionText.textContent = cert.caption;
-                captionText.className = 'text-xl font-semibold'; // Increased font-size to text-xl
+                captionText.className = 'text-xl font-semibold text-dark-text'; // Increased font-size to text-xl
                 fullScreenCaption.appendChild(captionText);
             }
         }
 
+        // Function to navigate full screen certificates
         function navigateFullScreen(direction) {
             currentFullScreenIndex += direction;
             if (currentFullScreenIndex >= certificatesData.length) {
@@ -1072,6 +1105,7 @@
             _loadFullScreenContent(certificatesData[currentFullScreenIndex]);
         }
 
+        // Function to close full screen modal
         function closeFullScreenModal() {
             fullScreenModal = document.getElementById('fullScreenModal');
             if (fullScreenModal) {
@@ -1188,14 +1222,13 @@
         document.getElementById('contactForm').addEventListener('submit', (event) => handleSubmit(event, 'contactForm'));
         document.getElementById('contactModalForm').addEventListener('submit', (event) => handleSubmit(event, 'contactModalForm'));
 
-        // Modal functions
-        let contactModal; // Declared globally
-        let paletteModal; // Declared globally
-        let paletteList; // Declared globally
+        // Modal functions (declared globally, assigned in DOMContentLoaded)
+        // These are already declared at the top of the script.
+        // No 'let' keyword here to avoid re-declaration.
 
         function openContactModal() {
             if (contactModal) {
-                contactModal.style.display = 'flex'; // Use flex to center
+                contactModal.style.display = 'flex';
             }
         }
 
@@ -1205,14 +1238,71 @@
             }
         }
 
+        let currentPaletteIndex = 0; // Declared here as requested
+
+        function openPaletteModal() {
+            if (!paletteModal || !paletteList) {
+                console.error("Palette modal or list element not found during openPaletteModal call!");
+                return;
+            }
+            paletteList.innerHTML = '';
+            colorPalettes.forEach((palette, index) => {
+                const paletteItem = document.createElement('div');
+                paletteItem.className = `palette-item ${index === currentPaletteIndex ? 'selected' : ''}`;
+                paletteItem.setAttribute('data-palette-index', index);
+                paletteItem.onclick = () => applyColorPalette(index);
+                for (const key in palette.colors) {
+                    const colorBar = document.createElement('div');
+                    colorBar.className = 'palette-color-bar';
+                    colorBar.style.backgroundColor = palette.colors[key];
+                    paletteItem.appendChild(colorBar);
+                }
+                const tooltip = document.createElement('div');
+                tooltip.className = 'palette-tooltip';
+                tooltip.textContent = Object.values(palette.colors).join(', ');
+                paletteItem.appendChild(tooltip);
+                paletteList.appendChild(paletteItem);
+            });
+            paletteModal.style.display = 'flex';
+        }
+
+        function closePaletteModal() {
+            if (paletteModal) {
+                paletteModal.style.display = 'none';
+            }
+        }
+
+        function applyColorPalette(index) {
+            currentPaletteIndex = index;
+            const selectedPalette = colorPalettes[index].colors;
+            const root = document.documentElement;
+            for (const key in selectedPalette) {
+                root.style.setProperty(`--color-${key}`, selectedPalette[key]);
+            }
+            if (myRadarChart) { // Use global variable directly
+                myRadarChart.data.datasets[0].backgroundColor = `rgba(${parseInt(selectedPalette['dark-accent'].substring(1,3), 16)}, ${parseInt(selectedPalette['dark-accent'].substring(3,5), 16)}, ${parseInt(selectedPalette['dark-accent'].substring(5,7), 16)}, 0.2)`;
+                myRadarChart.data.datasets[0].borderColor = selectedPalette['dark-accent'];
+                myRadarChart.data.datasets[0].pointBackgroundColor = selectedPalette['dark-accent'];
+                myRadarChart.data.datasets[0].pointHoverBorderColor = selectedPalette['dark-accent'];
+                myRadarChart.update();
+            }
+            document.querySelectorAll('.palette-item').forEach((item, idx) => {
+                item.classList.remove('selected');
+                if (idx === index) {
+                    item.classList.add('selected');
+                }
+            });
+            closePaletteModal();
+        }
+
         window.onclick = function(event) {
             if (event.target == contactModal) {
-                contactModal.style.display = 'none';
+                closeContactModal();
             }
-            if (event.target == paletteModal) { // Close palette modal if clicking outside
+            if (event.target == paletteModal) {
                 closePaletteModal();
             }
-            if (event.target == fullScreenModal) { // Close full screen modal if clicking outside
+            if (event.target == fullScreenModal) {
                 closeFullScreenModal();
             }
         }
@@ -1225,200 +1315,86 @@
 
             mobileNav.classList.toggle('open');
             overlay.classList.toggle('open');
-            body.classList.toggle('no-scroll'); // Prevent scrolling when menu is open
+            body.classList.toggle('no-scroll');
         }
 
-        // Color palette data
+        // Color palette data (remains unchanged)
         const colorPalettes = [
             {
                 name: "Modern Verdant",
                 colors: {
-                    'darkest-bg': '#2f3e46ff',
-                    'dark-text': '#354f52ff',
-                    'dark-accent': '#52796fff',
-                    'light-accent': '#84a98cff',
-                    'lightest': '#cad2c5ff'
+                    'darkest-bg': '#2f3e46ff', 'dark-text': '#354f52ff', 'dark-accent': '#52796fff', 'light-accent': '#84a98cff', 'lightest': '#cad2c5ff'
                 }
             },
             {
                 name: "Space Cadet & Rose Quartz",
                 colors: {
-                    'darkest-bg': '#22223bff',
-                    'dark-text': '#4a4e69ff',
-                    'dark-accent': '#9a8c98ff',
-                    'light-accent': '#c9ada7ff',
-                    'lightest': '#f2e9e4ff'
+                    'darkest-bg': '#22223bff', 'dark-text': '#4a4e69ff', 'dark-accent': '#9a8c98ff', 'light-accent': '#c9ada7ff', 'lightest': '#f2e9e4ff'
                 }
             },
             {
                 name: "Ocean Blues",
                 colors: {
-                    'darkest-bg': '#03045eff',
-                    'dark-text': '#0077b6ff',
-                    'dark-accent': '#00b4d8ff',
-                    'light-accent': '#90e0efff',
-                    'lightest': '#caf0f8ff'
+                    'darkest-bg': '#03045eff', 'dark-text': '#0077b6ff', 'dark-accent': '#00b4d8ff', 'light-accent': '#90e0efff', 'lightest': '#caf0f8ff'
                 }
             },
             {
                 name: "Barn Red & Prussian Blue",
                 colors: {
-                    'darkest-bg': '#003049ff',
-                    'dark-text': '#780000ff',
-                    'dark-accent': '#c1121fff',
-                    'light-accent': '#669bbcff',
-                    'lightest': '#fdf0d5ff'
+                    'darkest-bg': '#003049ff', 'dark-text': '#780000ff', 'dark-accent': '#c1121fff', 'light-accent': '#669bbcff', 'lightest': '#fdf0d5ff'
                 }
             },
             {
                 name: "Warm Earth Tones",
                 colors: {
-                    'darkest-bg': '#355070ff',
-                    'dark-text': '#6d597aff',
-                    'dark-accent': '#b56576ff',
-                    'light-accent': '#e56b6fff',
-                    'lightest': '#eaac8bff'
+                    'darkest-bg': '#355070ff', 'dark-text': '#6d597aff', 'dark-accent': '#b56576ff', 'light-accent': '#e56b6fff', 'lightest': '#eaac8bff'
                 }
             },
             {
                 name: "Grayscale & Blue",
                 colors: {
-                    'darkest-bg': '#0d1b2aff',
-                    'dark-text': '#1b263bff',
-                    'dark-accent': '#415a77ff',
-                    'light-accent': '#778da9ff',
-                    'lightest': '#e0e1ddff'
+                    'darkest-bg': '#0d1b2aff', 'dark-text': '#1b263bff', 'dark-accent': '#415a77ff', 'light-accent': '#778da9ff', 'lightest': '#e0e1ddff'
                 }
             },
             {
                 name: "Forest & Earth",
                 colors: {
-                    'darkest-bg': '#283618ff', /* Pakistan Green */
-                    'dark-text': '#606c38ff', /* Dark Moss Green */
-                    'dark-accent': '#bc6c25ff', /* Tiger's Eye */
-                    'light-accent': '#dda15eff', /* Earth Yellow */
-                    'lightest': '#fefae0ff'  /* Cornsilk */
+                    'darkest-bg': '#283618ff', 'dark-text': '#606c38ff', 'dark-accent': '#bc6c25ff', 'light-accent': '#dda15eff', 'lightest': '#fefae0ff'
                 }
             },
             {
                 name: "Autumnal Hues",
                 colors: {
-                    'darkest-bg': '#472d30ff',
-                    'dark-text': '#723d46ff',
-                'dark-accent': '#e26d5cff',
-                    'light-accent': '#ffe1a8ff',
-                    'lightest': '#c9cba3ff'
+                    'darkest-bg': '#472d30ff', 'dark-text': '#723d46ff', 'dark-accent': '#e26d5cff', 'light-accent': '#ffe1a8ff', 'lightest': '#c9cba3ff'
                 }
             },
             {
                 name: "Deep Ocean & Silver",
                 colors: {
-                    'darkest-bg': '#0d1321ff',
-                    'dark-text': '#1d2d44ff',
-                    'dark-accent': '#3e5c76ff',
-                    'light-accent': '#748cabff',
-                    'lightest': '#f0ebd8ff'
+                    'darkest-bg': '#0d1321ff', 'dark-text': '#1d2d44ff', 'dark-accent': '#3e5c76ff', 'light-accent': '#748cabff', 'lightest': '#f0ebd8ff'
                 }
             },
             {
                 name: "Dusty Rose & Gray",
                 colors: {
-                    'darkest-bg': '#565264ff',
-                    'dark-text': '#706677ff',
-                    'dark-accent': '#a6808cff',
-                    'light-accent': '#ccb7aeff',
-                    'lightest': '#d6cfcbff'
+                    'darkest-bg': '#565264ff', 'dark-text': '#706677ff', 'dark-accent': '#a6808cff', 'light-accent': '#ccb7aeff', 'lightest': '#d6cfcbff'
                 }
             }
         ];
 
-        let currentPaletteIndex = 0; // Default to the first palette
-
-        function openPaletteModal() {
-            // Ensure elements are retrieved when the function is called
-            paletteModal = document.getElementById('paletteModal');
-            paletteList = document.getElementById('paletteList'); 
-
-            if (!paletteModal || !paletteList) {
-                console.error("Palette modal or list element not found during openPaletteModal call!");
-                return;
-            }
-
-            paletteList.innerHTML = ''; // Clear previous list
-
-            colorPalettes.forEach((palette, index) => {
-                const paletteItem = document.createElement('div');
-                paletteItem.className = `palette-item ${index === currentPaletteIndex ? 'selected' : ''}`;
-                paletteItem.setAttribute('data-palette-index', index);
-                paletteItem.onclick = () => applyColorPalette(index);
-
-                // Create color bars
-                for (const key in palette.colors) {
-                    const colorBar = document.createElement('div');
-                    colorBar.className = 'palette-color-bar';
-                    colorBar.style.backgroundColor = palette.colors[key];
-                    paletteItem.appendChild(colorBar);
-                }
-
-                // Add tooltip
-                const tooltip = document.createElement('div');
-                tooltip.className = 'palette-tooltip';
-                tooltip.textContent = Object.values(palette.colors).join(', ');
-                paletteItem.appendChild(tooltip);
-
-                paletteList.appendChild(paletteItem);
-            });
-
-            paletteModal.style.display = 'flex';
-        }
-
-        function closePaletteModal() {
-            // Ensure element is retrieved when the function is called
-            paletteModal = document.getElementById('paletteModal');
-            if (paletteModal) {
-                paletteModal.style.display = 'none';
-            }
-        }
-
-        function applyColorPalette(index) {
-            currentPaletteIndex = index;
-            const selectedPalette = colorPalettes[index].colors;
-            const root = document.documentElement;
-
-            for (const key in selectedPalette) {
-                root.style.setProperty(`--color-${key}`, selectedPalette[key]);
-            }
-
-            // Update chart colors (if chart exists and needs update)
-            if (window.myRadarChart) {
-                window.myRadarChart.data.datasets[0].backgroundColor = `rgba(${parseInt(selectedPalette['dark-accent'].substring(1,3), 16)}, ${parseInt(selectedPalette['dark-accent'].substring(3,5), 16)}, ${parseInt(selectedPalette['dark-accent'].substring(5,7), 16)}, 0.2)`;
-                window.myRadarChart.data.datasets[0].borderColor = selectedPalette['dark-accent'];
-                window.myRadarChart.data.datasets[0].pointBackgroundColor = selectedPalette['dark-accent'];
-                window.myRadarChart.data.datasets[0].pointHoverBorderColor = selectedPalette['dark-accent'];
-                window.myRadarChart.update();
-            }
-
-            // Update selected state in modal (if modal is open)
-            // This part needs to be robust even if the modal is not currently open
-            const allPaletteItems = document.querySelectorAll('.palette-item');
-            allPaletteItems.forEach((item, idx) => {
-                item.classList.remove('selected');
-                if (idx === index) {
-                    item.classList.add('selected');
-                }
-            });
-
-            closePaletteModal();
-        }
-
-
+        // DOMContentLoaded event listener
         document.addEventListener('DOMContentLoaded', () => {
-            // Initialize global modal variables here after DOM is ready
+            // Initialize global DOM element variables
+            // These variables are already declared globally at the top of the script.
+            // Just assign them here.
             contactModal = document.getElementById('contactModal');
             paletteModal = document.getElementById('paletteModal');
-            paletteList = document.getElementById('paletteList'); 
+            paletteList = document.getElementById('paletteList');
+            fullScreenModal = document.getElementById('fullScreenModal');
+            fullScreenContent = document.getElementById('fullScreenContent');
+            fullScreenCaption = document.getElementById('fullScreenCaption');
 
-            // Attach event listener for the palette button
+            // Attach event listeners to buttons
             const openPaletteBtn = document.getElementById('openPaletteBtn');
             if (openPaletteBtn) {
                 openPaletteBtn.addEventListener('click', openPaletteModal);
@@ -1426,21 +1402,16 @@
                 console.error("Open palette button not found!");
             }
 
+            // Initial rendering and setup
             renderSkills();
             renderExperience();
-            window.myRadarChart = renderSkillChart(); // Store chart instance globally
+            myRadarChart = renderSkillChart(); // Assign to global variable
             renderCertificates();
-            // Attach scroll event listener for scrollspy
             window.addEventListener('scroll', handleScrollspy);
-            // Initial call to set active class on load
-            handleScrollspy(); // Call once on load to set initial active state
+            handleScrollspy(); // Initial call to set active class on load
             filterSkills('all'); // Initialize skill filter to 'All'
-            
-            // Documents section is open by default, so start carousel
-            startCarousel(); 
-
-            // Apply default palette on load
-            applyColorPalette(currentPaletteIndex);
+            startCarousel(); // Documents section is open by default, so start carousel
+            applyColorPalette(currentPaletteIndex); // Apply default palette on load
         });
     </script>
 </body>
