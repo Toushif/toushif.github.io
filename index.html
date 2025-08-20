@@ -310,11 +310,19 @@
             overflow: hidden; /* Ensure content doesn't overflow */
             position: relative; /* For nav buttons */
         }
-        #fullScreenContent img, #fullScreenContent iframe {
+        #fullScreenContent img {
             max-width: 100%;
             max-height: 95%; /* Increased from 85vh to 95% of modal-content height */
             object-fit: contain; /* Ensure image fits without cropping */
         }
+        #fullScreenContent iframe { /* Specific styling for iframes (PDFs) */
+            max-width: 90%; /* Constrain PDF width to prevent overflow on mobile */
+            max-height: 90%; /* Constrain PDF height on mobile */
+            width: 100%; /* Ensure it takes full width of its container */
+            height: 100%; /* Ensure it takes full height of its container */
+            object-fit: contain;
+        }
+
         .fullscreen-nav-button {
             position: absolute;
             top: 50%;
@@ -1025,7 +1033,7 @@
             if (isPdf) {
                 const iframe = document.createElement('iframe');
                 iframe.src = cert.src + '#toolbar=0&navpanes=0'; // Hide toolbar/nav for cleaner view
-                iframe.className = 'w-full h-full';
+                iframe.className = 'w-full h-full max-w-[90%] max-h-[90%]'; /* Constrain PDF size */
                 iframe.style.minHeight = '80vh'; // Ensure it takes up significant height
                 fullScreenContent.appendChild(iframe);
             } else {
