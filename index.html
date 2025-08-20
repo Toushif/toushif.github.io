@@ -152,7 +152,7 @@
         .modal {
             display: none;
             position: fixed;
-            z-index: 100;
+            z-index: 100; /* Increased z-index for all modals */
             left: 0;
             top: 0;
             width: 100%;
@@ -223,7 +223,7 @@
             color: var(--color-lightest);
             padding: 1.5rem;
             box-shadow: 0 0 15px rgba(0,0,0,0.5);
-            z-index: 50;
+            z-index: 100; /* Increased z-index */
             transform: translateX(-100%);
             transition: transform 0.3s ease-in-out;
             display: flex;
@@ -239,7 +239,7 @@
             width: 100%;
             height: 100%;
             background-color: rgba(0,0,0,0.5);
-            z-index: 49;
+            z-index: 99; /* Increased z-index */
             display: none;
         }
         #mobile-menu-overlay.open {
@@ -572,11 +572,12 @@
     <div id="fullScreenModal" class="modal">
         <div class="modal-content flex flex-col items-center p-4">
             <span class="close-button" onclick="closeFullScreenModal()">&times;</span>
-            <button class="fullscreen-nav-button left" onclick="navigateFullScreen(-1)">&#10094;</button>
+            <!-- Desktop Navigation Buttons (outside fullScreenContent but inside modal-content) -->
+            <button class="fullscreen-nav-button left hidden md:block" onclick="navigateFullScreen(-1)">&#10094;</button>
             <div id="fullScreenContent" class="w-full h-full flex items-center justify-center">
                 <!-- Image or PDF will be loaded here -->
             </div>
-            <button class="fullscreen-nav-button right" onclick="navigateFullScreen(1)">&#10095;</button>
+            <button class="fullscreen-nav-button right hidden md:block" onclick="navigateFullScreen(1)">&#10095;</button>
             <div id="fullScreenCaption" class="text-center text-dark-text mt-4 text-xl"></div>
         </div>
     </div>
@@ -1004,10 +1005,15 @@
 
             // Find the index of the clicked certificate
             currentFullScreenIndex = certificatesData.findIndex(item => item.src === cert.src);
-            _loadFullScreenContent(cert); // Load initial content
+            _loadFullScreenContent(certificatesData[currentFullScreenIndex]); // Load initial content
 
             fullScreenModal.style.display = 'flex';
             document.body.classList.add('no-scroll'); // Disable background scrolling
+
+            // Add touch event listeners for swipe navigation on mobile
+            fullScreenContent.addEventListener('touchstart', handleTouchStart, false);
+            fullScreenContent.addEventListener('touchmove', handleTouchMove, false);
+            fullScreenContent.addEventListener('touchend', handleTouchEnd, false);
         }
 
         function _loadFullScreenContent(cert) {
@@ -1064,8 +1070,43 @@
                 fullScreenModal.style.display = 'none';
             }
             document.body.classList.remove('no-scroll'); // Enable background scrolling
+            // Remove touch event listeners
+            fullScreenContent.removeEventListener('touchstart', handleTouchStart);
+            fullScreenContent.removeEventListener('touchmove', handleTouchMove);
+            fullScreenContent.removeEventListener('touchend', handleTouchEnd);
         }
         // --- End Full Screen Modal Logic ---
+
+        // --- Touch/Swipe Logic for Full Screen Modal (Mobile) ---
+        let touchStartX = 0;
+        let touchEndX = 0;
+        const swipeThreshold = 50; // Minimum pixels for a swipe
+
+        function handleTouchStart(event) {
+            touchStartX = event.touches[0].clientX;
+        }
+
+        function handleTouchMove(event) {
+            touchEndX = event.touches[0].clientX;
+            // Prevent vertical scrolling while swiping horizontally
+            if (Math.abs(touchEndX - touchStartX) > 10) { // Small threshold to allow slight vertical movement
+                event.preventDefault();
+            }
+        }
+
+        function handleTouchEnd() {
+            if (touchEndX < touchStartX - swipeThreshold) {
+                // Swiped left (show next)
+                navigateFullScreen(1);
+            } else if (touchEndX > touchStartX + swipeThreshold) {
+                // Swiped right (show previous)
+                navigateFullScreen(-1);
+            }
+            // Reset touch positions
+            touchStartX = 0;
+            touchEndX = 0;
+        }
+        // --- End Touch/Swipe Logic ---
 
 
         // Contact Form Validation and Mailto Logic
